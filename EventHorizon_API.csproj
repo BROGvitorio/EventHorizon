@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Extensions\" />
     <Folder Include="Properties\" />
     <Folder Include="DTOs\" />
     <Folder Include="Services\" />

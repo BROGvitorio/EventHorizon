@@ -1,8 +1,8 @@
 /*
  CURRENT:
-    - 
 
  TODO:
+    - Configurar propriedadaes compartilhadas BA
     - Forma de buscar renda mensal para calcular o limite de empréstimo
     - Analisar como manter o encapsulamento e deixar as classes acessíveis para o EF em BA
  */

@@ -4,26 +4,31 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventHorizon_API.Data.Configurations
 {
+    // Configuração TPH: bank_accounts emgloba os registros de business, checking e saving
     public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
     {
         public void Configure(EntityTypeBuilder<BankAccount> bankAccount)
         {
             bankAccount.ToTable("bank_accounts");
 
-            // Configuração TPH: bank_accounts emgloba os registros de business, checking e saving
-
             bankAccount.HasKey(ba => ba.Id);
 
-            bankAccount.HasDiscriminator(ba => ba.Category);
+            /*
+                When querying for derived entities, which use the TPH pattern, EF Core adds a predicate over discriminator column in the query. 
+                This filter makes sure that we don't get any additional rows for base types or sibling types not in the result. 
+                This filter predicate is skipped for the base entity type since querying for the base entity will get results for all the entities in the hierarchy.
 
-            ////mudar p sting
-            //bankAccount.HasDiscriminator<int>("Category")
-            //    .HasValue<Checking>((int)BankAccount.AccountCategory.checking)
-            //    .HasValue<Saving>((int)BankAccount.AccountCategory.saving)
-            //    .HasValue<Business>((int)BankAccount.AccountCategory.business);
 
+                Relational database providers, such as SQL Server, will not automatically use the discriminator predicate when querying shared columns when using a cast. 
+                The query Url = (blog as RssBlog).Url would also return the Url value for the sibling Blog rows. 
+                To restrict the query to RssBlog entities you need to manually add a filter on the discriminator, such as 
+                Url = blog is RssBlog ? (blog as RssBlog).Url : null.
+            */
+            bankAccount.HasDiscriminator<string>("Category")
+                .HasValue<Business>("business")
+                .HasValue<Checking>("checking")
+                .HasValue<Saving>("saving");
             bankAccount.Property(ba => ba.Category)
-                .HasConversion<String>()
                 .HasMaxLength(8)
                 .IsRequired();
 

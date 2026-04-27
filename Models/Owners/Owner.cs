@@ -14,9 +14,9 @@ namespace EventHorizon_API.Models.Owners
         public OwnerType Type { get; protected set; }
         public int UserId { get; private set; }
 
-        public ICollection<BankAccount> BankAccounts { get; protected set; }
+        public ICollection<BankAccount> BankAccounts { get; protected set; } = new List<BankAccount>();
 
-        //private Owner () { }
+        //protected Owner () { }
 
         protected Owner (int userId, OwnerType ownerType)
         {

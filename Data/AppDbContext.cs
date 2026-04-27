@@ -12,6 +12,9 @@ namespace EventHorizon_API.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Owner> Owners { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Person> People { get; set; }
+
         public DbSet<BankAccount> BankAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
