@@ -9,7 +9,9 @@ namespace EventHorizon_API.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<BankAccount> bankAccount)
         {
-            bankAccount.ToTable("bank_accounts");
+            bankAccount
+                .UseTphMappingStrategy()
+                .ToTable("bank_accounts");
 
             bankAccount.HasKey(ba => ba.Id);
 

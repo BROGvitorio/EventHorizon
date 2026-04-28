@@ -9,7 +9,7 @@
 
         //private Person () { }
 
-        public Person (int userId, string cpf, string fullName, DateOnly birthDate, decimal salary) : base (userId, OwnerType.person) {
+        public Person (int userId, string cpf, string fullName, DateOnly birthDate, decimal salary) : base (userId) {
             Cpf = cpf;
             FullName = fullName;
             BirthDate = birthDate;

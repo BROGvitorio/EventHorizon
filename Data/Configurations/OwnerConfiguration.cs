@@ -8,7 +8,8 @@ namespace EventHorizon_API.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Owner> owner)
         {
-            owner.ToTable("owners");
+            owner.UseTptMappingStrategy()
+                .ToTable("owners");
 
             owner.HasKey(o => o.Id);
 

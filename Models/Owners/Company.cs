@@ -8,7 +8,7 @@
 
         //private Company () { }
 
-        public Company(int userId, string cnpj, string fantasyName, decimal monthlyIncome) : base(userId, OwnerType.company) {
+        public Company(int userId, string cnpj, string fantasyName, decimal monthlyIncome) : base(userId) {
             Cnpj = cnpj;
             FantasyName = fantasyName;
             MonthlyIncome = monthlyIncome;
