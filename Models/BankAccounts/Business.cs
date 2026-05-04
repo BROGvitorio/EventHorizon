@@ -2,7 +2,7 @@
 {
     public class Business : BankAccount
     {
-        //private Business () { }
+        private Business () { }
 
         public Business(int ownerId) : base(ownerId)
         {

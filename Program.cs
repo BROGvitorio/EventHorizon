@@ -24,7 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 // dotnet ef migrations remove
 // dotnet ef database update
 
-builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+//builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
 
 var app = builder.Build();
 

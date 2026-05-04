@@ -2,7 +2,7 @@
 {
     public class Checking : BankAccount
     {
-        //private Checking () { }
+        private Checking () { }
 
         public Checking (int ownerId) : base (ownerId)
         {

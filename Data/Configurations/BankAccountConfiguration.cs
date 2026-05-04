@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventHorizon_API.Data.Configurations
 {
-    // Configuração TPH: bank_accounts emgloba os registros de business, checking e saving
+    // Configuração TPH: bank_accounts engloba os registros de business, checking e saving
     public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
     {
         public void Configure(EntityTypeBuilder<BankAccount> bankAccount)
@@ -26,13 +26,15 @@ namespace EventHorizon_API.Data.Configurations
                 To restrict the query to RssBlog entities you need to manually add a filter on the discriminator, such as 
                 Url = blog is RssBlog ? (blog as RssBlog).Url : null.
             */
-            bankAccount.HasDiscriminator<string>("Category")
-                .HasValue<Business>("business")
-                .HasValue<Checking>("checking")
-                .HasValue<Saving>("saving");
             bankAccount.Property(ba => ba.Category)
-                .HasMaxLength(8)
+                .HasConversion<string>()
+                .HasMaxLength(10)
                 .IsRequired();
+
+            bankAccount.HasDiscriminator(ba => ba.Category)
+                .HasValue<Business>(BankAccount.AccountCategory.business)
+                .HasValue<Checking>(BankAccount.AccountCategory.checking)
+                .HasValue<Saving>(BankAccount.AccountCategory.saving);
 
             bankAccount.Property(ba => ba.Balance)
                 .HasPrecision(15, 2)

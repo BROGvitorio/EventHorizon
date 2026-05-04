@@ -13,10 +13,10 @@ namespace EventHorizon_API.Data.Configurations
 
             owner.HasKey(o => o.Id);
 
-            owner.Property(o => o.Type)
-                .HasConversion<String>()
-                .HasMaxLength(7)
-                .IsRequired();
+            //owner.Property(o => o.Type)
+            //    .HasConversion<String>()
+            //    .HasMaxLength(7)
+            //    .IsRequired();
 
             owner.HasMany(o => o.BankAccounts)
                 .WithOne()

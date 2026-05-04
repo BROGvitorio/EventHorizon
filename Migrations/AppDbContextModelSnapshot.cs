@@ -30,8 +30,26 @@ namespace EventHorizon_API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("Balance")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(15, 2)
+                        .HasColumnType("decimal(15,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<string>("Category")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<decimal>("LoanDebt")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(15, 2)
+                        .HasColumnType("decimal(15,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("LoanLimit")
+                        .HasPrecision(15, 2)
+                        .HasColumnType("decimal(15,2)");
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
@@ -40,7 +58,11 @@ namespace EventHorizon_API.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("BankAccount");
+                    b.ToTable("bank_accounts", (string)null);
+
+                    b.HasDiscriminator<string>("Category");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("EventHorizon_API.Models.Owners.Owner", b =>
@@ -51,11 +73,6 @@ namespace EventHorizon_API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(7)
-                        .HasColumnType("varchar(7)");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -63,7 +80,7 @@ namespace EventHorizon_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Owners", (string)null);
+                    b.ToTable("owners", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -91,7 +108,28 @@ namespace EventHorizon_API.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("EventHorizon_API.Models.BankAccounts.Business", b =>
+                {
+                    b.HasBaseType("EventHorizon_API.Models.BankAccounts.BankAccount");
+
+                    b.HasDiscriminator().HasValue("business");
+                });
+
+            modelBuilder.Entity("EventHorizon_API.Models.BankAccounts.Checking", b =>
+                {
+                    b.HasBaseType("EventHorizon_API.Models.BankAccounts.BankAccount");
+
+                    b.HasDiscriminator().HasValue("checking");
+                });
+
+            modelBuilder.Entity("EventHorizon_API.Models.BankAccounts.Saving", b =>
+                {
+                    b.HasBaseType("EventHorizon_API.Models.BankAccounts.BankAccount");
+
+                    b.HasDiscriminator().HasValue("saving");
                 });
 
             modelBuilder.Entity("EventHorizon_API.Models.Owners.Company", b =>
@@ -115,7 +153,7 @@ namespace EventHorizon_API.Migrations
                     b.HasIndex("Cnpj")
                         .IsUnique();
 
-                    b.ToTable("Companies", (string)null);
+                    b.ToTable("companies", (string)null);
                 });
 
             modelBuilder.Entity("EventHorizon_API.Models.Owners.Person", b =>
@@ -143,7 +181,7 @@ namespace EventHorizon_API.Migrations
                     b.HasIndex("Cpf")
                         .IsUnique();
 
-                    b.ToTable("People", (string)null);
+                    b.ToTable("people", (string)null);
                 });
 
             modelBuilder.Entity("EventHorizon_API.Models.BankAccounts.BankAccount", b =>

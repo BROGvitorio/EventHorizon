@@ -19,7 +19,7 @@
         public int OwnerId { get; protected set; }
         //public int UserId { get; protected set; }
 
-        //private BankAccount () { }
+        protected BankAccount () { }
 
         public BankAccount (int ownerId)
         {
