@@ -1,10 +1,10 @@
 ﻿namespace EventHorizon_API.Models.BankAccounts
 {
-    public class Checking : BankAccount
+    public class CheckingAccount : BankAccount
     {
-        private Checking () { }
+        public CheckingAccount () { }
 
-        public Checking (int ownerId) : base (ownerId)
+        public CheckingAccount (int ownerId) : base (ownerId)
         {
             WithdrawalTax = 0.05m;
             Category = AccountCategory.checking;

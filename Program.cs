@@ -10,6 +10,7 @@
 
 using EventHorizon_API.Data;
 using EventHorizon_API.Repositories;
+using EventHorizon_API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 // dotnet ef migrations remove
 // dotnet ef database update
 
-//builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+builder.Services.AddScoped<IBankAccountService, BankAccountService>();
 
 var app = builder.Build();
 

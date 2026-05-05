@@ -32,9 +32,9 @@ namespace EventHorizon_API.Data.Configurations
                 .IsRequired();
 
             bankAccount.HasDiscriminator(ba => ba.Category)
-                .HasValue<Business>(BankAccount.AccountCategory.business)
-                .HasValue<Checking>(BankAccount.AccountCategory.checking)
-                .HasValue<Saving>(BankAccount.AccountCategory.saving);
+                .HasValue<BusinessAccount>(BankAccount.AccountCategory.business)
+                .HasValue<CheckingAccount>(BankAccount.AccountCategory.checking)
+                .HasValue<SavingAccount>(BankAccount.AccountCategory.saving);
 
             bankAccount.Property(ba => ba.Balance)
                 .HasPrecision(15, 2)

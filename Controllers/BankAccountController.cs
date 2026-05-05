@@ -1,20 +1,38 @@
-﻿//using EventHorizon_API.Repositories;
-//using Microsoft.AspNetCore.Http.HttpResults;
-//using Microsoft.AspNetCore.Mvc;
+﻿using EventHorizon_API.Models.BankAccounts;
+using EventHorizon_API.Services;
+using EventHorizon_API.DTOs;
+using EventHorizon_API.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace EventHorizon_API.Controllers 
-//{
+namespace EventHorizon_API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BankAccountController : ControllerBase
+    {
+        private readonly IBankAccountService _service;
 
-//    public class BankAccountController : ControllerBase
-//    {
-//        private readonly IBankAccountRepository _repository;
+        public BankAccountController(IBankAccountService service)
+        {
+            _service = service;
+        }
 
-//        public BankAccountController(IBankAccountRepository repository)
-//        {
-//            _repository = repository;
-//        }
+        [HttpGet]
+        public async Task<IActionResult> Get() => Ok(await _service.ListAll());
 
-//        [HttpGet]
-//        public async Task<IActionResult> Get() => Ok(await _repository.ListBankAccounts());
-//    }
-//}
+        [HttpPost]
+        public async Task<IActionResult> Post(BankAccountDTO bankAccountDTO)
+        {
+            try
+            {
+                await _service.Create(bankAccountDTO);
+                return Ok("Livro cadastrado com sucesso");
+
+            } catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+    }
+}

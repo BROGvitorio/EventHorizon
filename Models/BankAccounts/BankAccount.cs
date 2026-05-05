@@ -8,15 +8,15 @@
             saving = 2
         }
 
-        public AccountCategory Category { get; protected set; }
-        public int Id { get; protected set; }
-        public decimal Balance { get; protected set; }
+        public AccountCategory Category { get; set; }
+        public int Id { get; set; }
+        public decimal Balance { get; set; }
 
-        public decimal LoanLimit { get; protected set; }
-        public decimal LoanDebt { get; protected set; }
-        public decimal WithdrawalTax { get; protected set; } = 0;
+        public decimal LoanLimit { get; set; }
+        public decimal LoanDebt { get; set; }
+        public decimal WithdrawalTax { get; set; } = 0;
 
-        public int OwnerId { get; protected set; }
+        public int OwnerId { get; set; }
         //public int UserId { get; protected set; }
 
         protected BankAccount () { }
