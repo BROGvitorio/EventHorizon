@@ -1,11 +1,14 @@
 /*
- CURRENT:
-    -
+    CURRENT:
+        - Estrutura de camadas p herança TPT Owners, Person e Company
 
- TODO:
-    - Configurar propriedadaes compartilhadas BA
-    - Forma de buscar renda mensal para calcular o limite de empréstimo
-    - Analisar como manter o encapsulamento e deixar as classes acessíveis para o EF em BA
+    TODO:
+        -
+
+    EXTRA:
+        - hash nas senhas
+        - uuid ao invés de ids sequenciais
+
  */
 
 using EventHorizon_API.Data;
@@ -27,6 +30,13 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 
 builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 var app = builder.Build();
 

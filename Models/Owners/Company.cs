@@ -2,11 +2,11 @@
 {
     public class Company : Owner
     {
-        public string Cnpj { get; private set; }
-        public string FantasyName { get; private set; }
-        public decimal MonthlyIncome { get; private set; }
+        public string Cnpj { get; set; }
+        public string FantasyName { get; set; }
+        public decimal MonthlyIncome { get; set; }
 
-        //private Company () { }
+        public Company () { }
 
         public Company(int userId, string cnpj, string fantasyName, decimal monthlyIncome) : base(userId) {
             Cnpj = cnpj;

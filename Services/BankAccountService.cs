@@ -25,7 +25,7 @@ namespace EventHorizon_API.Services
                 Balance = bankAccountDTO.Balance,
             };
 
-            await _repository.Add(newAccount);
+            await _repository.Create(newAccount);
         }
     }
 }

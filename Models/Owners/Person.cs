@@ -2,12 +2,12 @@
 {
     public class Person: Owner
     {
-        public string Cpf { get; private set; }
-        public string FullName { get; private set; }
-        public DateOnly BirthDate { get; private set; }
-        public decimal Salary { get; private set; }
+        public string Cpf { get; set; }
+        public string FullName { get; set; }
+        public DateOnly BirthDate { get; set; }
+        public decimal Salary { get; set; }
 
-        //private Person () { }
+        public Person () { }
 
         public Person (int userId, string cpf, string fullName, DateOnly birthDate, decimal salary) : base (userId) {
             Cpf = cpf;

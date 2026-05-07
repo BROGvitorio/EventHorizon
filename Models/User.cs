@@ -4,10 +4,10 @@ namespace EventHorizon_API.Models
 {
     public class User
     {
-        public int Id { get; private set; }
-        public string Email { get; private set; }
-        public string LoginPassword { get; private set; }
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public string LoginPassword { get; set; }
 
-        public ICollection<Owner> Profiles { get; private set; }
+        public ICollection<Owner> Profiles { get; set; }
     }
 }

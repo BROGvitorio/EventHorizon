@@ -9,25 +9,25 @@ namespace EventHorizon_API.Controllers
     [ApiController]
     [Route("api/[controller]")]
 
-    public class UserController : ControllerBase
+    public class CompanyController : ControllerBase
     {
-        private readonly IUserService _service;
+        private readonly ICompanyService _service;
 
-        public UserController(IUserService service)
+        public CompanyController(ICompanyService service)
         {
             _service = service;
         }
 
-        [HttpGet("ListUsers")]
+        [HttpGet("ListCompanies")]
         public async Task<IActionResult> Get() => Ok(await _service.ListAll());
 
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> Post(UserDTO userDTO)
+        [HttpPost("CreateCompany")]
+        public async Task<IActionResult> Post(CompanyDTO companyDTO)
         {
             try
             {
-                await _service.Create(userDTO);
-                return Ok("Usuário cadastrado com sucesso");
+                await _service.Create(companyDTO);
+                return Ok("Empresa cadastrada com sucesso");
 
             }
             catch (Exception e)

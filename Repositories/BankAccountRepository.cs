@@ -1,13 +1,9 @@
 ﻿using EventHorizon_API.Data;
-using EventHorizon_API.Models;
 using EventHorizon_API.Models.BankAccounts;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Principal;
 
 namespace EventHorizon_API.Repositories
 {
-    //conexão
-
     public class BankAccountRepository : IBankAccountRepository
     {
         private readonly AppDbContext _context;
@@ -22,7 +18,7 @@ namespace EventHorizon_API.Repositories
             return await _context.BankAccounts.ToListAsync();
         }
 
-        public async Task Add(BankAccount newAccount)
+        public async Task Create(BankAccount newAccount)
         {
             await _context.BankAccounts.AddAsync(newAccount);
             await _context.SaveChangesAsync();
@@ -36,7 +32,7 @@ namespace EventHorizon_API.Repositories
 
         public async Task Delete(BankAccount account)
         {
-            _context.BankAccounts.ExecuteDelete();
+            _context.BankAccounts.Remove(account);
             await _context.SaveChangesAsync();
         }
     }

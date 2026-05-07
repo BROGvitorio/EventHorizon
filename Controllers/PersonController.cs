@@ -1,6 +1,4 @@
-﻿using EventHorizon_API.Data;
-using EventHorizon_API.DTOs;
-using EventHorizon_API.Models;
+﻿using EventHorizon_API.DTOs;
 using EventHorizon_API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,25 +7,25 @@ namespace EventHorizon_API.Controllers
     [ApiController]
     [Route("api/[controller]")]
 
-    public class UserController : ControllerBase
+    public class PersonController : ControllerBase
     {
-        private readonly IUserService _service;
+        private readonly IPersonService _service;
 
-        public UserController(IUserService service)
+        public PersonController(IPersonService service)
         {
             _service = service;
         }
 
-        [HttpGet("ListUsers")]
+        [HttpGet("ListPeople")]
         public async Task<IActionResult> Get() => Ok(await _service.ListAll());
 
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> Post(UserDTO userDTO)
+        [HttpPost("CreatePerson")]
+        public async Task<IActionResult> Post(PersonDTO personDTO)
         {
             try
             {
-                await _service.Create(userDTO);
-                return Ok("Usuário cadastrado com sucesso");
+                await _service.Create(personDTO);
+                return Ok("Pessoa cadastrada com sucesso");
 
             }
             catch (Exception e)
