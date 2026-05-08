@@ -18,6 +18,8 @@ namespace EventHorizon_API.Services
 
         public async Task Create(UserDTO userDTO)
         {
+
+
             var newUser = new User
             {
                 Email = userDTO.Email,
