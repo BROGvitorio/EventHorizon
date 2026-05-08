@@ -1,6 +1,4 @@
-﻿using EventHorizon_API.Data;
-using EventHorizon_API.DTOs;
-using EventHorizon_API.Models;
+﻿using EventHorizon_API.DTOs;
 using EventHorizon_API.Services;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,5 +1,4 @@
 ﻿using EventHorizon_API.Repositories;
-using EventHorizon_API.Models;
 using EventHorizon_API.Models.BankAccounts;
 using EventHorizon_API.DTOs;
 

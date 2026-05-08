@@ -6,11 +6,11 @@ namespace EventHorizon_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BankAccountController : ControllerBase
+    public class BankTransactionController : ControllerBase
     {
-        private readonly IBankAccountService _service;
+        private readonly IBankTransactionService _service;
 
-        public BankAccountController(IBankAccountService service)
+        public BankTransactionController(IBankTransactionService service)
         {
             _service = service;
         }
@@ -19,12 +19,12 @@ namespace EventHorizon_API.Controllers
         public async Task<IActionResult> Get() => Ok(await _service.ListAll());
 
         [HttpPost]
-        public async Task<IActionResult> Post(BankAccountDTO bankAccountDTO)
+        public async Task<IActionResult> Post(BankTransactionDTO bankTransactionDTO)
         {
             try
             {
-                await _service.Create(bankAccountDTO);
-                return Ok("Livro cadastrado com sucesso");
+                await _service.Create(bankTransactionDTO);
+                return Ok("Transação registrada com sucesso");
 
             } catch (Exception e)
             {
