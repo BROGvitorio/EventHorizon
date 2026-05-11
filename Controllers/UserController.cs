@@ -17,11 +17,11 @@ namespace EventHorizon_API.Controllers
             _service = service;
         }
 
-        [HttpGet("ListUsers")]
+        [HttpGet]
         public async Task<IActionResult> Get() => Ok(await _service.ListAll());
 
         [Authorize]
-        [HttpPost("CreateUser")]
+        [HttpPost]
         public async Task<IActionResult> Post(UserDTO userDTO)
         {
             try

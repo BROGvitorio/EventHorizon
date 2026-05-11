@@ -18,7 +18,7 @@ namespace EventHorizon_API.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("Login")]
+        [HttpPost]
         public IActionResult Login([FromBody] UserDTO login)
         {
             if(login.Email == "admin@email.com" && login.LoginPassword == "1234")
