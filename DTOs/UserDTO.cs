@@ -1,4 +1,6 @@
-﻿namespace EventHorizon_API.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EventHorizon_API.DTOs
 {
     public class UserDTO
     {

@@ -26,19 +26,18 @@ namespace EventHorizon_API.Controllers
             return Ok(await _service.GetByEmail(userEmail));
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(UserDTO userDTO)
         {
             try
             {
                 await _service.Create(userDTO);
-                return Ok("Usuário cadastrado com sucesso");
+                return Ok(new { message = "Usuário cadastrado com sucesso!" });
 
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new { message = e.Message });
             }
         }
 
