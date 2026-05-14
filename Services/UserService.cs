@@ -70,6 +70,26 @@ namespace EventHorizon_API.Services
             else throw new Exception("Usuário não encontrado");
         }
 
+        public async Task Update(UserDTO userDTO) {
+            if (userDTO.Email == null || userDTO.Email.Trim() == "")
+            {
+               throw new Exception("Digite um email!");
+            }
+
+            if (userDTO.LoginPassword == null || userDTO.LoginPassword.Trim() == "")
+            {
+               throw new Exception("Digite uma senha!");
+            }
+            
+            User user = await _repository.GetByEmail(userDTO.Email);
+
+            if(user != null) {
+                user.LoginPassword = userDTO.LoginPassword;
+                await _repository.Update(user);
+            } 
+            else throw new Exception("Usuário não encontrado");
+        }
+
         public async Task<UserDTO> GetByEmail(String userEmail)
         {
             User user = await _repository.GetByEmail(userEmail);

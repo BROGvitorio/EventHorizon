@@ -56,5 +56,21 @@ namespace EventHorizon_API.Controllers
                 return NotFound(new { message = e.Message});
             }
         }
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UserDTO userDTO)
+        {
+            try
+            {
+                await _service.Update(userDTO);
+                return Ok(new { message = "Usuário atualizado com sucesso!" });
+
+            }
+            catch (Exception e)
+            {
+                return NotFound(new { message = e.Message});
+            }
+        }
     }
 }

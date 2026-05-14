@@ -102,3 +102,29 @@ async function DeleteUser() {
         console.error(erro);
     }
 }
+
+async function UpdateUser() {
+    const updatedUser = {
+        Email: document.getElementById('userEmailUpdate').value,
+        LoginPassword: document.getElementById('userPasswordUpdate').value
+    }
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedUser)
+        });
+
+        const data = await response.json();
+
+        alert(data.message);
+    } catch (erro) {
+        console.error(erro);
+    }
+
+    window.location.reload();
+}

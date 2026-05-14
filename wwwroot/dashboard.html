@@ -40,7 +40,7 @@
 
             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal">Deletar</button>
-                <button type="button" class="btn btn-warning">Atualizar</button>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateUserModal">Atualizar</button>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">Criar</button>
             </div>
 
@@ -86,6 +86,35 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                             <button type="button" class="btn btn-primary" onclick="CreateUser('userEmailCreate', 'userPasswordCreate')">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Atualizar senha</h1>
+                        </div>
+                        <div class="modal-body d-flex flex-column align-items-center">
+                            <label>Digite o email do usuário que deseja atualizar:</label>
+                            <input id="userEmailUpdate" type="text" placeholder="Email" class="bg-transparent border-0 border-bottom border-dark-subtle">
+                            
+                            <label class="mt-4">Digite a nova senha:</label>
+                            <input id="userPasswordUpdate" type="password" placeholder="Senha" class="bg-transparent border-0 border-bottom border-dark-subtle">
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" role="switch" id="showPassword"
+                                    onchange="
+                                        const passwordInput = document.getElementById('userPasswordUpdate');
+                                        
+                                        passwordInput.type = (this.checked) ? 'text' : 'password';">
+                                <label class="form-check-label" for="showPassword">Mostrar senha</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" onclick="UpdateUser()">Salvar</button>
                         </div>
                     </div>
                 </div>
