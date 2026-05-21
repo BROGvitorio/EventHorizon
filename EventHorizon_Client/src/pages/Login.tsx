@@ -2,24 +2,68 @@ import React, { useState } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { Link, useNavigate } from 'react-router';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
-  // Função para lidar com a submissão do formulário
-  const handleLogin = (e: React.SyntheticEvent) => {
-    e.preventDefault();
+const authUrl = "/EventHorizon_API/api/Auth";
+
+interface LoginResponse {
+  token: string;
+  message: string;
+}
+
+export default function Login() {
+
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+
+  const handleLogin = async (e: React.SubmitEvent) => {
+    let navigate = useNavigate();
     
+    e.preventDefault();
+    setIsLoading(true);
+
+    const userLogin = {
+      Email: email,
+      LoginPassword: password
+    };
+
     console.log('Tentativa de login com:', { email, password });
+
+    try {
+      const response = await fetch(authUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userLogin)
+      });
+
+      const data: LoginResponse = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        alert(data.message);
+        navigate("/auth/dashboard");
+      } else {
+        alert(data.message || 'Falha ao realizar o login.');
+      }
+    } catch (error) {
+      console.error('Erro na requisição de login:', error);
+      alert('Houve um erro ao conectar com o servidor.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div 
       id="main-page" 
-      className="d-flex align-content-center justify-content-center flex-wrap">
-
+      className="d-flex align-content-center justify-content-center flex-wrap"
+    >
       <main className="d-flex flex-column align-content-center justify-content-center w-25 h-50 bg-light shadow-lg border border-secondary-subtle p-5 rounded-5">
         
         <form 
@@ -35,6 +79,7 @@ export default function LoginPage() {
             className="bg-transparent border-0 border-bottom border-dark-subtle"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={isLoading}
             required
           />
 
@@ -46,6 +91,7 @@ export default function LoginPage() {
               className="bg-transparent border-0 border-bottom border-dark-subtle w-100"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
               required
             />
             
@@ -67,15 +113,15 @@ export default function LoginPage() {
           <button 
             type="submit" 
             className="w-50 align-self-center btn btn-dark"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? 'Entrando...' : 'Login'}
           </button>
         </form>
 
-        <h6 className="text-center">
+        <h6 className="text-center mt-3">
           Não tem uma conta?{' '}
-          {/* Nota: Em uma app real com rotas, prefira usar o <Link> do react-router-dom */}
-          <a href="/signup">Cadastre-se</a>
+          <Link to="/auth/register">Cadastre-se</Link>
         </h6>
       </main>
     </div>

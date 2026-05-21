@@ -3,17 +3,33 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router'
 
 import './index.css'
-import LoginPage from './pages/LoginPage'
-// import App from './App.tsx'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Dashboard from './pages/Dashboard'
+import ProtectedRoute from './components/ProtectedRoute'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LoginPage/>}></Route>
-        {/* <Route path="/register" element={<LoginPage/>}></Route> */}
+          <Route path="/" element={<Login/>}></Route>
+        
+        <Route path="/auth">
+          <Route path="login" element={<Login/>}></Route>
+          <Route path="register" element={<Register/>}></Route>
+        </Route>
+
+
+        <Route 
+          path="dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        
       </Routes>
-      <LoginPage/>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )
