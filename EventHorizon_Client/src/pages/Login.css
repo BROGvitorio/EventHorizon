@@ -1,0 +1,41 @@
+.loginCard {
+    width: 35vw;
+    background-color: var(--neutral-800);
+    padding: 5vh;
+
+    row-gap: 2vh;
+}
+
+.ehLogo {
+    height: 10vh;
+    filter: invert(1);
+}
+
+.form-check-input:checked {
+    background-color: var(--neutral-600);
+    border-color: var(--neutral-600);
+}
+
+.form-check-input {
+    background-color: var(--neutral-800);
+    border-color: var(--neutral-600)
+}
+
+.form-check-input:focus {
+    border-color: var(--neutral-600);
+    box-shadow: none;
+}
+
+input::placeholder {
+    color: var(--text-secondary);
+}
+
+input {
+    color: var(--text-primary)
+}
+
+@media screen and (max-width: 768px) {
+    .loginCard {
+        width: 80vw;
+    }
+}

@@ -1,0 +1,15 @@
+.btn-outline-dark, .btn {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-check+.btn:hover {
+  border-color: var(--primary-hover);
+  color: var(--text-secondary);
+}
+
+.btn-check:checked+.btn{
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-primary)
+}

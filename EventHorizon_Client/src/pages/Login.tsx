@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { Link, useNavigate } from 'react-router';
-
+import './Login.css'
+import AuthToggle from '../components/AuthToggle';
 
 const authUrl = "/EventHorizon_API/api/Auth";
 
@@ -19,6 +20,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [selectedAuth, setSelectedAuth] = useState<string>('login');
 
   const handleLogin = async (e: React.SubmitEvent) => {
     let navigate = useNavigate();
@@ -60,23 +62,27 @@ export default function Login() {
   };
 
   return (
-    <div 
-      id="main-page" 
-      className="d-flex align-content-center justify-content-center flex-wrap"
+    <div className="mainPage d-flex align-content-center justify-content-center flex-wrap"
     >
-      <main className="d-flex flex-column align-content-center justify-content-center w-25 h-50 bg-light shadow-lg border border-secondary-subtle p-5 rounded-5">
+      <main className="loginCard d-flex flex-column align-content-center justify-content-center h-75 rounded-5">
+
+        <img className="ehLogo" src="./src/assets/eh_logo.svg" alt="Event Horizon logotipo" />
+
+        <h2 className="align-self-center fw-semibold">Acesse sua conta</h2>
+
+        <AuthToggle value={selectedAuth} onChange={setSelectedAuth}></AuthToggle>
+        
         
         <form 
           onSubmit={handleLogin} 
           className="h-100 d-flex flex-column justify-content-around"
         >
-          <h2 className="align-self-center">Login</h2>
 
           <input 
             type="email" 
             placeholder="Email" 
             id="loginEmail"
-            className="bg-transparent border-0 border-bottom border-dark-subtle"
+            className="bg-transparent border-0 border-bottom"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
@@ -88,23 +94,20 @@ export default function Login() {
               type={showPassword ? 'text' : 'password'} 
               placeholder="Senha" 
               id="loginPassword"
-              className="bg-transparent border-0 border-bottom border-dark-subtle w-100"
+              className="bg-transparent border-0 border-bottom w-100"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
               required
             />
             
-            <div className="form-check form-switch mt-2">
-              <input 
-                className="form-check-input" 
-                type="checkbox" 
-                role="switch" 
+            <div className="form-check mt-3">
+              <input className="form-check-input" type="checkbox"
                 id="showPassword"
                 checked={showPassword}
                 onChange={() => setShowPassword(!showPassword)}
               />
-              <label className="form-check-label" htmlFor="showPassword">
+              <label className="form-check-label" htmlFor="checkDefault">
                 Mostrar senha
               </label>
             </div>
@@ -112,14 +115,14 @@ export default function Login() {
 
           <button 
             type="submit" 
-            className="w-50 align-self-center btn btn-dark"
+            className="w-50 align-self-center"
             disabled={isLoading}
           >
             {isLoading ? 'Entrando...' : 'Login'}
           </button>
         </form>
 
-        <h6 className="text-center mt-3">
+        <h6 className="text-center mt-3 fw-medium">
           Não tem uma conta?{' '}
           <Link to="/auth/register">Cadastre-se</Link>
         </h6>
