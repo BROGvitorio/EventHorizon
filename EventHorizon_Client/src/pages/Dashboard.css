@@ -1,0 +1,79 @@
+.header {
+    padding: 0 6vw;
+    height: 10vh;
+    background-color: var(--neutral-800);
+}
+
+.eh-logo {
+    filter: invert(1);
+    height: 10vh;
+}
+
+.user-options {
+    justify-content: flex-end;
+}
+
+.btn.fw-bold {
+    height: 5vh;
+    width: 5vw;
+    border-color: transparent;
+    color: var(--primary);
+}
+
+.btn.fw-bold:hover {
+    height: 5vh;
+    width: 5vw;
+    border-color: var(--primary-hover);
+    color: var(--primary-hover);
+}
+
+.currentProfileSection {
+    width: 80vw;
+    height: 20vh;
+    border-bottom: 2px solid;
+    border-color: var(--neutral-700);
+}
+
+.profileController {
+    height: 10%;
+
+}
+
+.profileDetails {
+    height: 55vh;
+}
+
+.rounded-circle {
+    background-color: var(--primary);
+    width: 6vh;
+    height: 6vh;
+}
+
+.profileAccounts, .profileTransactions {
+    width: 40vw;
+}
+
+.profileAccount {
+    height: 12vh;
+    border: 2px solid var(--neutral-700);
+    border-radius: 16px;
+}
+
+.profileTransaction table {
+    justify-self: end;
+    margin-right: 15vw;
+    color: var(--text-secondary);
+}
+
+.profileTransaction th, .profileTransaction table td{
+    width: 10vw;
+}
+
+.profileSelector {
+    background-color: transparent;
+    color: var(--text-secondary);
+}
+
+.profileSelector:focus-visible {
+    outline: none;
+}

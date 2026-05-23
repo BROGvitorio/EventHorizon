@@ -24,14 +24,6 @@ export default function SignUpForm() {
 
     const personData = [
         { 
-            label: 'Cpf', 
-            type: 'text', 
-            placeholder: '00000000000', 
-            id: 'cpf',  
-            value: cpf, 
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setCpf(e.target.value)
-        },
-        { 
             label: 'Nome Completo', 
             type: 'text', 
             placeholder: 'Fulano da Silva', 
@@ -171,6 +163,25 @@ export default function SignUpForm() {
                         </button>
                             Dados Pessoais
                         </h4>
+                        
+                        <div className="d-flex flex-column">
+                            <label htmlFor="cpf">CPF</label>
+                            <input
+                                type = "number"
+                                placeholder = "00000000000"
+                                className="bg-transparent border-0 border-bottom"
+                                id = "cpf"
+                                value = {cpf}
+                                onChange={(e) => {
+                                    if (e.target.value.length > 11) {
+                                    e.target.value = e.target.value.slice(0, 11);
+                                    }
+                                    setCpf(e.target.value);
+                                }} 
+                                disabled={isLoading}
+                                required
+                            />
+                        </div>
 
                         {personData.map((option) => (
                             <React.Fragment key={option.id}>
@@ -178,12 +189,12 @@ export default function SignUpForm() {
                                     <label htmlFor={option.id}>{option.label}</label>
                                     <input
                                         type ={ option.type}
-                                        placeholder= {option.placeholder}
-                                        className="bg-transparent border-0 border-bottom"
+                                        placeholder = {option.placeholder}
+                                        className ="bg-transparent border-0 border-bottom"
                                         id = {option.id}
                                         value = {option.value}
-                                        onChange={option.onChange}
-                                        disabled={isLoading}
+                                        onChange ={option.onChange}
+                                        disabled ={isLoading}
                                         required
                                     />
                                 </div>

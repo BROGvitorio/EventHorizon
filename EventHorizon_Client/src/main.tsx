@@ -6,31 +6,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './index.css'
 
-import Login from './pages/Auth'
-import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
+import Dashboard from './pages/Dashboard';
+import Auth from './pages/Auth';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-          <Route path="/" element={<Login/>}></Route>
-        
-        <Route path="/auth">
-          <Route path="login" element={<Login/>}></Route>
-          <Route path="register" element={<Register/>}></Route>
-        </Route>
+          <Route path="/" element={<Auth/>}></Route>
+          <Route path="/auth" element={<Auth/>}></Route>
 
-
-        <Route 
-          path="dashboard" 
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } 
-        />
+          <Route 
+            path="dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
         
       </Routes>
     </BrowserRouter>

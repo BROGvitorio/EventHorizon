@@ -1,0 +1,15 @@
+.bi-person-circle {
+    display: block;
+    transform: scale(2);
+    width: 4vw;
+}
+
+.bi-cash {
+    transform: scale(2);
+    fill: var(--neutral-900);
+}
+
+.bi-piggy-bank-fill {
+    transform: scale(2);
+    fill: var(--neutral-900);
+}
