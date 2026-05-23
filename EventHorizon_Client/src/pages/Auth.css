@@ -1,4 +1,4 @@
-.loginCard {
+.authCard {
     width: 35vw;
     background-color: var(--neutral-800);
     padding: 5vh;
@@ -31,11 +31,16 @@ input::placeholder {
 }
 
 input {
-    color: var(--text-primary)
+    color: var(--text-secondary);
+    font-size: large;
+}
+
+input:focus {
+    color: var(--text-primary);
 }
 
 @media screen and (max-width: 768px) {
-    .loginCard {
+    .authCard {
         width: 80vw;
     }
 }

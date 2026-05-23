@@ -7,7 +7,7 @@ interface AuthToggleProps {
 }
 
 export default function AuthToggle({ value, onChange }: AuthToggleProps) {
-  const radioOptions = [
+  const authOptions = [
     { id: 'loginRadio', label: 'Login', val: 'login' },
     { id: 'signUpRadio', label: 'Cadastro', val: 'signup' },
   ];
@@ -15,7 +15,7 @@ export default function AuthToggle({ value, onChange }: AuthToggleProps) {
   return (
     <div className="w-f max-w-sm mx-auto">
       <div className="btn-group w-100" role="group">
-        {radioOptions.map((option) => (
+        {authOptions.map((option) => (
           <React.Fragment key={option.id}>
             <input
               type="radio"

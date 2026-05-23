@@ -1,0 +1,23 @@
+input[type="date"] {
+    color: var(--text-secondary);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+input[type="date"]:focus {
+    color: var(--text-primary);
+}
+
+.goBack {
+    width: fit-content;
+    background-color: transparent;
+}
+
+.goBack:hover {
+    border-color: var(--primary-hover);
+    color: var(--primary-hover);
+    width: fit-content;
+    background-color: transparent;
+}
