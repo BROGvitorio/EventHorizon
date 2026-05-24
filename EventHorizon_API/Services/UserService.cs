@@ -67,18 +67,18 @@ namespace EventHorizon_API.Services
             User user = await _repository.GetByEmail(userEmail);
 
             if(user != null) await _repository.Delete(user);
-            else throw new Exception("Usuário não encontrado");
+            else throw new Exception("Usuário não encontrado.");
         }
 
         public async Task Update(UserDTO userDTO) {
             if (userDTO.Email == null || userDTO.Email.Trim() == "")
             {
-               throw new Exception("Digite um email!");
+               throw new Exception("O campo de email não pode estar nulo.");
             }
 
             if (userDTO.LoginPassword == null || userDTO.LoginPassword.Trim() == "")
             {
-               throw new Exception("Digite uma senha!");
+               throw new Exception("O campo de senha não pode ser nulo.");
             }
             
             User user = await _repository.GetByEmail(userDTO.Email);
@@ -104,7 +104,17 @@ namespace EventHorizon_API.Services
                 return userDTO;
             }
                 
-            else throw new Exception("Usuário não encontrado");
+            throw new Exception("Usuário não encontrado");
+        }
+
+        public async Task<int> GetUserId(String userEmail)
+        {
+            User user = await _repository.GetByEmail(userEmail);
+
+            if (user != null)
+                return user.Id;
+            else 
+                throw new Exception("Usuário não encontrado");
         }
     }
 }

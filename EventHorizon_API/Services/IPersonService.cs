@@ -6,7 +6,7 @@ namespace EventHorizon_API.Services
 {
     public interface IPersonService
     {
-        Task<IEnumerable<Person>> ListAll();
         Task Create(PersonDTO personDTO);
+        Task<PersonDTO> GetByCpf(String personCpf);
     }
 }

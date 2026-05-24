@@ -1,14 +1,12 @@
 import React from 'react';
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router";
 
-import './SignUpForm.css'
+import './SignUpForm.css';
 
-const SignUpUrl = "/EventHorizon_API/api/Auth";
+const UserUrl = "/EventHorizon_API/api/User";
 const PersonUrl = "/EventHorizon_API/api/Person";
 
 export default function SignUpForm() {
-    let navigate = useNavigate();
     const formRef = useRef<HTMLFormElement>(null);
 
     const [email, setEmail] = useState('');
@@ -71,29 +69,96 @@ export default function SignUpForm() {
         const newUser = {
             Email: email,
             LoginPassword: password,
+        };
 
+        let userMessage: string;
+        
+        try {
+            const userResponse = await fetch(UserUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newUser)
+            });
+
+            const userData = await userResponse.json();
+            
+            if (userResponse.ok) {
+                userMessage = userData.message;
+                console.log(userData.message);
+            }
+            else {
+                alert(userData.message);
+
+                setIsLoading(false);
+
+                setCpf('');
+                setFullName('');
+                setBirthdate('');
+                setSalary('');
+                setSignUpStep(1);
+
+                return;
+            }
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+
+        const userIdResponse = await fetch(`${UserUrl}/GetUserId/${email}`, {
+            method: 'GET'
+        });
+
+        const userId = await userIdResponse.json();
+        
+        const newPersonProfile = {
+            UserId: userId,
             Cpf: cpf,
             FullName: fullName,
             BirthDate: birthDate,
             Salary: salary
-        };
+        }
 
         try {
+            const personResponse = await fetch(PersonUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newPersonProfile)
+            });
 
-                const response = await fetch(SignUpUrl, {
-                    method: 'POST',
+            const personData = await personResponse.json();
+
+            if (personResponse.ok) {
+                alert(userMessage);
+                console.log(personData.message);
+                window.location.reload();
+            }
+            else {
+                alert(personData.message);
+
+                setIsLoading(false);
+
+                await fetch(UserUrl, {
+                    method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(newUser)
+                    body: JSON.stringify(newUser.Email)
                 });
-
-                const data = await response.json();
-
-                alert(data.message);
-            } catch (erro) {
-                console.error(erro);
             }
+
+        } catch (error) {
+            console.error(error);
+            setCpf('');
+            setFullName('');
+            setBirthdate('');
+            setSalary('');
+            setSignUpStep(1);
+            return;
+        }
     }
 
     return (
@@ -165,16 +230,18 @@ export default function SignUpForm() {
                         </h4>
                         
                         <div className="d-flex flex-column">
-                            <label htmlFor="cpf">CPF</label>
+                            <label htmlFor="cpf">CPF (apenas números)</label>
                             <input
-                                type = "number"
+                                type = "text"
+                                inputMode="numeric" 
+                                pattern="[0-9]*" 
                                 placeholder = "00000000000"
                                 className="bg-transparent border-0 border-bottom"
                                 id = "cpf"
                                 value = {cpf}
                                 onChange={(e) => {
                                     if (e.target.value.length > 11) {
-                                    e.target.value = e.target.value.slice(0, 11);
+                                        e.target.value = e.target.value.slice(0, 11);
                                     }
                                     setCpf(e.target.value);
                                 }} 
@@ -207,7 +274,7 @@ export default function SignUpForm() {
                         className="w-50 align-self-center mt-4"
                         disabled={isLoading}
                     >
-                        {isLoading ? 'Entrando...' : 'Login'}
+                        {isLoading ? 'Entrando...' : 'Cadastrar'}
                     </button>
                 </div>)
             }

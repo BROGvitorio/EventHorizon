@@ -7,9 +7,10 @@ namespace EventHorizon_API.Repositories
     {
         Task Create(Owner newOwner);
         Task Delete(Owner owner);
-        //Task<IEnumerable<Owner>> ListAll();
         
-        Task<IEnumerable<Person>> ListAllPeople();
         Task<IEnumerable<Company>> ListAllCompanies();
+
+        Task<Person> GetByCpf(String personCpf);
+        Task<Company> GetByCnpj(String companyCnpj);
     }
 }

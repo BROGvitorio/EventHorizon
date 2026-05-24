@@ -33,8 +33,13 @@ namespace EventHorizon_API.Controllers
                 if(userLogin.LoginPassword == null || userLogin.LoginPassword == "") {
                     throw new Exception("Senha não pode ser nula!");
                 }
-
-                var user = await _service.GetByEmail(userLogin.Email);
+                
+                UserDTO user;
+                try {
+                    user = await _service.GetByEmail(userLogin.Email);
+                } catch {
+                    return Unauthorized(new { message = "Usuário ou senha inválidos" });
+                }
 
                 if(user != null && user.LoginPassword == userLogin.LoginPassword)
                 {
@@ -43,7 +48,7 @@ namespace EventHorizon_API.Controllers
                     {
                         Subject = new ClaimsIdentity(new[]
                         {
-                            new Claim(ClaimTypes.Name, userLogin.Email),
+                            new Claim(ClaimTypes.Email, userLogin.Email),
                             new Claim(ClaimTypes.Role, "Administrator")
                         }),
                         Expires = DateTime.UtcNow.AddHours(2),

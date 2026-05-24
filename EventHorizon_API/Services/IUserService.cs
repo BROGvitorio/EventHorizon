@@ -10,5 +10,6 @@ namespace EventHorizon_API.Services
         Task Delete(String userEmail);
         Task Update(UserDTO userDTO);
         Task<UserDTO> GetByEmail(String userEmail);
+        Task<int> GetUserId(String userEmail);
     }
 }

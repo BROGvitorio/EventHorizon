@@ -26,6 +26,12 @@ namespace EventHorizon_API.Controllers
             return Ok(await _service.GetByEmail(userEmail));
         }
 
+        [HttpGet("GetUserId/{userEmail}")]
+        public async Task<IActionResult> GetId([FromRoute] string userEmail) 
+        {
+            return Ok(await _service.GetUserId(userEmail));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(UserDTO userDTO)
         {
@@ -41,7 +47,6 @@ namespace EventHorizon_API.Controllers
             }
         }
 
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] String userEmail)
         {
@@ -53,7 +58,7 @@ namespace EventHorizon_API.Controllers
             }
             catch (Exception e)
             {
-                return NotFound(new { message = e.Message});
+                return NotFound(new { message = e.Message });
             }
         }
 

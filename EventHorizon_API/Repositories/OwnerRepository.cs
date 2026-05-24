@@ -25,13 +25,19 @@ namespace EventHorizon_API.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Person>> ListAllPeople()
-        {
-            return await _context.People.ToListAsync();
-        }
         public async Task<IEnumerable<Company>> ListAllCompanies()
         {
             return await _context.Companies.ToListAsync();
+        }
+
+        public async Task<Person> GetByCpf(String personCpf)
+        {
+            return await _context.People.FirstOrDefaultAsync(p => p.Cpf == personCpf);
+        }
+
+        public async Task<Company> GetByCnpj(String companyCnpj)
+        {
+            return await _context.Companies.FirstOrDefaultAsync(c => c.Cnpj == companyCnpj);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using EventHorizon_API.DTOs;
 using EventHorizon_API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace EventHorizon_API.Controllers
 {
@@ -16,21 +18,29 @@ namespace EventHorizon_API.Controllers
             _service = service;
         }
 
-        [HttpGet("ListPeople")]
-        public async Task<IActionResult> Get() => Ok(await _service.ListAll());
+        [HttpGet("GetByCpf")]
+        public async Task<IActionResult> Get(String personCpf) {
+            try {
+                return Ok(await _service.GetByCpf(personCpf));
+            }
+            catch (Exception e) {
+                return NotFound(new {message = e.Message});
+            }
+        }
 
-        [HttpPost("CreatePerson")]
+        [HttpPost]
         public async Task<IActionResult> Post(PersonDTO personDTO)
         {
             try
             {
                 await _service.Create(personDTO);
-                return Ok("Pessoa cadastrada com sucesso");
+                return Ok(new {message = "Pessoa cadastrada com sucesso"});
 
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                var realErrorMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
+                return BadRequest(new { message = realErrorMessage });
             }
         }
     }
