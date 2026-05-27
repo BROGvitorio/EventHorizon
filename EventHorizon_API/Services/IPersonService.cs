@@ -8,5 +8,6 @@ namespace EventHorizon_API.Services
     {
         Task Create(PersonDTO personDTO);
         Task<PersonDTO> GetByCpf(String personCpf);
+        Task<PersonDTO> GetByUserId(int userId);
     }
 }

@@ -1,17 +1,3 @@
-/*
-    CURRENT:
-        - 
-
-    TODO:
-        - 
-
-    EXTRA:
-        - hash nas senhas
-        - uuid ao invés de ids sequenciais
-        - enums no banco
-
- */
-
 using EventHorizon_API.Data;
 using EventHorizon_API.Repositories;
 using EventHorizon_API.Services;

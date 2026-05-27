@@ -29,7 +29,24 @@ namespace EventHorizon_API.Services
                 return personDTO;
             }
                 
-            throw new Exception("Cadastro PF não encontrado");
+            throw new Exception("Cadastro PF não encontrado.");
+        }
+
+        public async Task<PersonDTO> GetByUserId(int userId) {
+            Person person = await _repository.GetPersonByUserId(userId);
+
+            if (person != null) {
+                PersonDTO personDTO = new PersonDTO {
+                    UserId = person.UserId,
+                    Cpf = person.Cpf,
+                    FullName = person.FullName,
+                    BirthDate = person.BirthDate,
+                    Salary = person.Salary
+                };
+                return personDTO;
+            }
+                
+            throw new Exception("Esse usuário não possui cadastro PF.");
         }
         
         public async Task Create(PersonDTO personDTO)
@@ -37,18 +54,20 @@ namespace EventHorizon_API.Services
             if (personDTO.Cpf.Length != 11)
                 throw new Exception("O CPF deve conter 11 dígitos.");
 
-
             if (personDTO.BirthDate > DateOnly.FromDateTime(DateTime.Now) ||
                 personDTO.BirthDate < new DateOnly(1906, 01, 01)
             )
-                throw new Exception("Data de nascimento inválida");
+                throw new Exception("Data de nascimento inválida.");
             
             if (personDTO.BirthDate > DateOnly.FromDateTime((DateTime.Now).AddYears(-18)))
-                throw new Exception("Você deve ser maior de idade para abrir uma conta");
+                throw new Exception("Você deve ser maior de idade para abrir uma conta.");
+
+            if (personDTO.Salary <= 0)
+                throw new Exception("Salário inválido.");
 
             Person person = await _repository.GetByCpf(personDTO.Cpf);
             if (person != null) {
-                throw new Exception("Esse CPF já está cadastrado");
+                throw new Exception("Esse CPF já está cadastrado.");
             }
 
             var newPerson = new Person

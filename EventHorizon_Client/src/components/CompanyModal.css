@@ -1,0 +1,45 @@
+.custom-modal-theme {
+  --modal-bg: var(--neutral-800);       
+  --modal-text: var(--text-primary);     /* Cor dos textos e títulos */
+  --modal-accent: #00adb5;   /* Cor das linhas do input e do botão principal */
+  --input-label: var(--text-primary);
+
+  background-color: var(--modal-bg) !important;
+  color: var(--modal-text) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 3vw;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+.btn-close:hover {
+    background-color: transparent;
+}
+
+input::placeholder {
+    color: var(--text-secondary);
+}
+
+input {
+    color: var(--text-secondary);
+    font-size: large;
+    background-color: var(--neutral-800);
+}
+
+input:focus {
+    color: var(--text-primary);
+    outline: none;
+}
+
+.btn {
+    color: var(--text-primary);
+    background-color: var(--neutral-800);
+    border: 2px solid var(--primary);
+}
+
+.btn:hover {
+    background-color: var(--primary);
+}

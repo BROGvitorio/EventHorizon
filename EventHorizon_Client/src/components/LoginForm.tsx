@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-interface LoginResponse {
-    token: string;
-    message: string;
-}
-
-const loginUrl = "/EventHorizon_API/api/Auth";
 
 export default function LoginForm() {
+    interface LoginResponse {
+        token: string;
+        message: string;
+    }
+    
+    const loginUrl = "/EventHorizon_API/api/Auth";
+    
     let navigate = useNavigate();
 
     const [email, setEmail] = useState<string>('');
@@ -40,7 +41,7 @@ export default function LoginForm() {
             if (response.ok) {
                 localStorage.setItem("token", data.token);
                 alert(data.message);
-                navigate("dashboard");
+                navigate("/dashboard");
             } else {
                 alert(data.message || 'Falha ao realizar o login.');
             }

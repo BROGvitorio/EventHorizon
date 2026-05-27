@@ -17,10 +17,6 @@ namespace EventHorizon_API.Data.Configurations
                 .WithOne()
                 .HasForeignKey(ba => ba.OwnerId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            //owner.HasDiscriminator<string>("Type")
-            //    .HasValue<Person>("person")
-            //    .HasValue<Company>("company");
         }
     }
 }

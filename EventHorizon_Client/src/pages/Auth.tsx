@@ -10,7 +10,7 @@ export default function Auth() {
 
   return (
     <div className="mainPage d-flex align-content-center justify-content-around flex-wrap">
-      <main className="authCard d-flex flex-column align-content-center justify-content-center h-75 rounded-5">
+      <main className="authCard h-75 d-flex flex-column align-content-center justify-content-center rounded-5">
 
         <img className="ehLogo" src="./src/assets/eh_logo.svg" alt="Event Horizon logotipo" />
 

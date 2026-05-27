@@ -3,8 +3,8 @@ import { useState, useRef } from "react";
 
 import './SignUpForm.css';
 
-const UserUrl = "/EventHorizon_API/api/User";
-const PersonUrl = "/EventHorizon_API/api/Person";
+const userUrl = "/EventHorizon_API/api/User";
+const personUrl = "/EventHorizon_API/api/Person";
 
 export default function SignUpForm() {
     const formRef = useRef<HTMLFormElement>(null);
@@ -20,7 +20,7 @@ export default function SignUpForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [signUpStep, setSignUpStep] = useState(1);
 
-    const personData = [
+    const personInputs = [
         { 
             label: 'Nome Completo', 
             type: 'text', 
@@ -74,7 +74,7 @@ export default function SignUpForm() {
         let userMessage: string;
         
         try {
-            const userResponse = await fetch(UserUrl, {
+            const userResponse = await fetch(userUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function SignUpForm() {
             return;
         }
 
-        const userIdResponse = await fetch(`${UserUrl}/GetUserId/${email}`, {
+        const userIdResponse = await fetch(`${userUrl}/GetUserId/${email}`, {
             method: 'GET'
         });
 
@@ -121,7 +121,7 @@ export default function SignUpForm() {
         }
 
         try {
-            const personResponse = await fetch(PersonUrl, {
+            const personResponse = await fetch(personUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ export default function SignUpForm() {
 
                 setIsLoading(false);
 
-                await fetch(UserUrl, {
+                await fetch(userUrl, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -158,6 +158,8 @@ export default function SignUpForm() {
             setSalary('');
             setSignUpStep(1);
             return;
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -250,7 +252,7 @@ export default function SignUpForm() {
                             />
                         </div>
 
-                        {personData.map((option) => (
+                        {personInputs.map((option) => (
                             <React.Fragment key={option.id}>
                                 <div className="d-flex flex-column">
                                     <label htmlFor={option.id}>{option.label}</label>

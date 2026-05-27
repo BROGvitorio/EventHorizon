@@ -77,3 +77,6 @@
 .profileSelector:focus-visible {
     outline: none;
 }
+
+#pjProfileModal {
+}

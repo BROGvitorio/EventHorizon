@@ -8,6 +8,6 @@ namespace EventHorizon_API.Repositories
         Task Create(User newUser);
         Task Update(User updatedUser);
         Task Delete(User user);
-        Task<User?> GetByEmail(String userEmail);
+        Task<User> GetByEmail(String userEmail);
     }
 }

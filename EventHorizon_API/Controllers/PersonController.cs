@@ -18,16 +18,6 @@ namespace EventHorizon_API.Controllers
             _service = service;
         }
 
-        [HttpGet("GetByCpf")]
-        public async Task<IActionResult> Get(String personCpf) {
-            try {
-                return Ok(await _service.GetByCpf(personCpf));
-            }
-            catch (Exception e) {
-                return NotFound(new {message = e.Message});
-            }
-        }
-
         [HttpPost]
         public async Task<IActionResult> Post(PersonDTO personDTO)
         {
@@ -39,8 +29,28 @@ namespace EventHorizon_API.Controllers
             }
             catch (Exception e)
             {
-                var realErrorMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
-                return BadRequest(new { message = realErrorMessage });
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
+        [HttpGet("GetByCpf/{personCpf}")]
+        public async Task<IActionResult> Get([FromRoute] String personCpf) {
+            try {
+                return Ok(await _service.GetByCpf(personCpf));
+            }
+            catch (Exception e) {
+                return NotFound(new {message = e.Message});
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetByUserId/{userId}")]
+        public async Task<IActionResult> Get([FromRoute] int userId) {
+            try {
+                return Ok(await _service.GetByUserId(userId));
+            }
+            catch (Exception e) {
+                return NotFound(new {message = e.Message});
             }
         }
     }

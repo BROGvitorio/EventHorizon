@@ -25,11 +25,6 @@ namespace EventHorizon_API.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Company>> ListAllCompanies()
-        {
-            return await _context.Companies.ToListAsync();
-        }
-
         public async Task<Person> GetByCpf(String personCpf)
         {
             return await _context.People.FirstOrDefaultAsync(p => p.Cpf == personCpf);
@@ -38,6 +33,18 @@ namespace EventHorizon_API.Repositories
         public async Task<Company> GetByCnpj(String companyCnpj)
         {
             return await _context.Companies.FirstOrDefaultAsync(c => c.Cnpj == companyCnpj);
+        }
+
+        public async Task<Person> GetPersonByUserId(int userId)
+        {
+            return await _context.People.FirstOrDefaultAsync(p => p.UserId == userId);
+        }
+
+        public async Task<List<Company>> GetCompaniesByUserId(int userId)
+        {
+            return await _context.Companies
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
         }
     }
 }
