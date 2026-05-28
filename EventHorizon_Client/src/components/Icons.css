@@ -13,3 +13,8 @@
     transform: scale(2);
     fill: var(--neutral-900);
 }
+
+.bi-briefcase-fill {
+    transform: scale(2);
+    fill: var(--neutral-900);
+}

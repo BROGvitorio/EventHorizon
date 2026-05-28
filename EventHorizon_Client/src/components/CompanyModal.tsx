@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 import './CompanyModal.css';
-import type { Company, Profile } from "./CustomLib";
+import type { CCompany, CBankAccount, Company, Profile } from "./CustomLib";
+import { companyUrl, bankAccountUrl } from "./CustomLib";
 
 interface CompanyModalProps {
     isLoading: boolean;
@@ -10,8 +11,6 @@ interface CompanyModalProps {
     profiles: Profile[];
     AddProfile: (newProfile: any) => void;
 }
-
-const companyUrl = "/EventHorizon_API/api/Company";
 
 export default function CompanyModal({ isLoading, SetIsLoading, userId, profiles, AddProfile }: CompanyModalProps) {
     const [cnpj, setCnpj] = useState('');
@@ -41,7 +40,7 @@ export default function CompanyModal({ isLoading, SetIsLoading, userId, profiles
         e.preventDefault();
         SetIsLoading(true);
 
-        const newCompanyProfile: Company = {
+        const newCompanyProfile: CCompany = {
             userId: userId,
             cnpj: cnpj,
             fantasyName: fantasyName,
@@ -49,7 +48,7 @@ export default function CompanyModal({ isLoading, SetIsLoading, userId, profiles
         }
 
         const token = localStorage.getItem('token');
-
+        let pjProfileMessage: string;
         try {
             const companyResponse = await fetch(companyUrl, {
                 method: 'POST',
@@ -63,12 +62,58 @@ export default function CompanyModal({ isLoading, SetIsLoading, userId, profiles
             const companyData = await companyResponse.json();
 
             if (companyResponse.ok) {
-                alert(companyData.message);
+                pjProfileMessage = companyData.message;
             }
             else {
                 alert(companyData.message);
                 SetIsLoading(false);
                 return;
+            }
+
+            const companyResponse2 = await fetch(`${companyUrl}/GetByCnpj/${cnpj}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            const companyData2: Company = await companyResponse2.json();
+
+            const newBusinessAccount: CBankAccount = {
+                ownerId: companyData2.id,
+                ownerMonthlyIncome: companyData2.monthlyIncome,
+                category: "business"
+            }
+
+            const accountResponse = await fetch(bankAccountUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newBusinessAccount)
+            });
+
+            const accountData = await accountResponse.json();
+
+            if (accountResponse.ok) {
+                alert(pjProfileMessage);
+                console.log(accountData.message);
+
+                if (newCompanyProfile) {
+                    AddProfile(
+                        {
+                            documentId: newCompanyProfile.cnpj,
+                            name: newCompanyProfile.fantasyName,
+                            type: 'PJ',
+                            userId: newCompanyProfile.userId,
+                            ownerId: companyData2.id
+                        }
+                    );
+                }
+            }
+            else {
+                alert(accountData.message);
             }
         } catch (error) {
             console.error(error);
@@ -76,16 +121,6 @@ export default function CompanyModal({ isLoading, SetIsLoading, userId, profiles
             return;
         }
 
-        if (newCompanyProfile) {
-            AddProfile(
-                {
-                    documentId: newCompanyProfile.cnpj,
-                    name: newCompanyProfile.fantasyName,
-                    type: 'PJ',
-                    userId: newCompanyProfile.userId
-                }
-            );
-        }
 
         setCnpj('');
         setFantasyName('');

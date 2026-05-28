@@ -3,6 +3,13 @@ export const companyUrl = "/EventHorizon_API/api/Company";
 export const personUrl = "/EventHorizon_API/api/Person";
 export const userUrl = "/EventHorizon_API/api/User";
 
+export interface CCompany {
+  cnpj: string;
+  fantasyName: string;
+  monthlyIncome: number;
+  userId: number;
+}
+
 export interface Company {
   cnpj: string;
   fantasyName: string;

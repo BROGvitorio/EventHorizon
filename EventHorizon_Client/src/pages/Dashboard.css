@@ -50,7 +50,7 @@
 }
 
 .profileAccounts, .profileTransactions {
-    width: 40vw;
+    width: 45vw;
 }
 
 .profileAccount {
@@ -78,5 +78,6 @@
     outline: none;
 }
 
-#pjProfileModal {
+.profileTransactions h5, .profileTransactions h2 {
+    color: var(--text-muted);
 }

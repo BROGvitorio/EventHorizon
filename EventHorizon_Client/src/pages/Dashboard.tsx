@@ -4,7 +4,7 @@ import { jwtDecode, type JwtPayload } from "jwt-decode";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-import { UserProfile, CheckingAccount, SavingAccount } from '../components/Icons';
+import { UserProfile, CheckingAccount, SavingAccount, BusinessAccount } from '../components/Icons';
 import './Dashboard.css'
 import { useNavigate } from 'react-router';
 import CompanyModal from '../components/CompanyModal';
@@ -12,6 +12,17 @@ import CompanyModal from '../components/CompanyModal';
 import type { BankAccount, Company, Person, Profile } from '../components/CustomLib';
 import type { UserPayload } from '../components/CustomLib';
 import { userUrl, personUrl, companyUrl, bankAccountUrl } from '../components/CustomLib';
+
+export const getLocalDate = (): string => {
+  const localDate = new Date();
+  
+  return localDate.toLocaleDateString('pt-BR', {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Ensures it respects the local system timezone
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +39,7 @@ export default function Dashboard() {
 
   const addProfile = (newProfile: Profile) => {
     setProfiles(prevProfiles => {
-      console.log(prevProfiles);
+      // console.log(prevProfiles);
 
       const exists = prevProfiles.some(p => p.documentId === newProfile.documentId);
 
@@ -91,11 +102,11 @@ export default function Dashboard() {
       const userIdResponse = await fetch(`${userUrl}/GetUserId/${userEmail}`, {
         method: 'GET'
       });
-      const userId = await userIdResponse.json();
-      setUserId(userId);
+      const userIdFromApi = await userIdResponse.json();
+      setUserId(userIdFromApi);
 
       try {
-        const personResponse = await fetch(`${personUrl}/GetByUserId/${userId}`, {
+        const personResponse = await fetch(`${personUrl}/GetByUserId/${userIdFromApi}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -103,17 +114,37 @@ export default function Dashboard() {
           },
         });
 
-        const personData: Person = await personResponse.json();
+        let pfProfile: Profile | null = null;
+        let initialOwnerId = -1;
 
-        const pfProfile: Profile = {
-          documentId: personData.cpf,
-          name: personData.fullName,
-          type: 'PF',
-          ownerId: personData.id,
-          userId: personData.userId
+        if (personResponse.ok) {
+          const personDataPartial: Person = await personResponse.json();
+
+          if (personDataPartial.cpf) {
+            const personFullResponse = await fetch(`${personUrl}/GetByCpf/${personDataPartial.cpf}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+            });
+
+            if (personFullResponse.ok) {
+              const personFullData: Person = await personFullResponse.json();
+              initialOwnerId = personFullData.id;
+
+              pfProfile = {
+                documentId: personFullData.cpf,
+                name: personFullData.fullName,
+                type: 'PF',
+                ownerId: personFullData.id,
+                userId: personFullData.userId
+              };
+            }
+          }
         }
 
-        const companyResponse = await fetch(`${companyUrl}/GetByUserId/${userId}`, {
+        const companyResponse = await fetch(`${companyUrl}/GetByUserId/${userIdFromApi}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -123,39 +154,60 @@ export default function Dashboard() {
 
         let pjProfiles: Profile[] = [];
         if (companyResponse.ok) {
-          const companiesList: Company[] = await companyResponse.json();
+          const companiesListPartial: Company[] = await companyResponse.json();
 
-          pjProfiles = companiesList.map(c => ({
-            documentId: c.cnpj,
-            name: c.fantasyName,
-            type: 'PJ',
-            ownerId: c.id,
-            userId: parseInt(userId)
-          }));
+          pjProfiles = await Promise.all(
+            companiesListPartial.map(async (company) => {
+              try {
+                const companyFullResponse = await fetch(`${companyUrl}/GetByCnpj/${company.cnpj}`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  },
+                });
+
+                if (companyFullResponse.ok) {
+                  const companyFullData: Company = await companyFullResponse.json();
+                  return {
+                    documentId: companyFullData.cnpj,
+                    name: companyFullData.fantasyName,
+                    type: 'PJ',
+                    ownerId: companyFullData.id, 
+                    userId: Number(userIdFromApi)
+                  };
+                }
+              } catch (err) {
+                console.error(`Erro ao buscar dados completos da empresa CNPJ: ${company.cnpj}`, err);
+              }
+
+              return {
+                documentId: company.cnpj,
+                name: company.fantasyName,
+                type: 'PJ',
+                ownerId: company.id,
+                userId: Number(userIdFromApi)
+              };
+            })
+          );
         }
 
-        setProfiles([pfProfile, ...pjProfiles]);
-        setProfileName(pfProfile.name);
+        const allProfiles = pfProfile ? [pfProfile, ...pjProfiles] : pjProfiles;
+        setProfiles(allProfiles);
 
-        const personResponse2 = await fetch(`${personUrl}/GetByCpf/${personData.cpf}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-        });
-
-        const personData2: Person = await personResponse2.json();
-
-        if (personResponse2.ok) {
-          console.log(personData2);
-          getOwnerAccounts(token, personData2.id);
+        if (pfProfile) {
+          setProfileName(pfProfile.name);
+          if (initialOwnerId !== -1) {
+            getOwnerAccounts(token, initialOwnerId);
+          }
+        } else if (pjProfiles.length > 0) {
+          setProfileName(pjProfiles[0].name);
+          getOwnerAccounts(token, pjProfiles[0].ownerId);
         }
 
       } catch (erro) {
-        console.error(erro);
+        console.error("Erro no fluxo de carregamento de dados:", erro);
       }
-
     };
     fetchUserData();
 
@@ -191,7 +243,7 @@ export default function Dashboard() {
       <section className="currentProfileSection d-flex px-5 justify-content-between align-items-center">
         <div>
           <h1>Olá, {profileName}!</h1>
-          <p>24 de abril de 2024</p>
+          <p>{getLocalDate()}</p>
         </div>
 
         <div className="profileController d-flex h-100 align-items-center column-gap-5">
@@ -207,14 +259,14 @@ export default function Dashboard() {
                 setProfileName(selectedProfile.name);
 
                 const token = localStorage.getItem('token');
-                console.log(selectedProfile.ownerId);
                 if (!token) return;
+
                 getOwnerAccounts(token, selectedProfile.ownerId);
               }
             }}
           >
-            {profiles.map((option, index) => (
-              <option key={`${option.documentId}-${index}`} value={option.documentId}>
+            {profiles.map((option) => (
+              <option key={option.documentId} value={option.documentId}>
                 {option.name}
               </option>
             ))}
@@ -229,18 +281,31 @@ export default function Dashboard() {
 
           {bankAccounts.length > 0 ? (
             bankAccounts.map((account, index) => {
-              const isChecking = parseInt(account.category) == 1;
-
-              console.log(bankAccounts);
 
               return (
                 <div key={index} className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
                   <div className="rounded-circle d-flex justify-content-center align-items-center">
-                    {isChecking ? <CheckingAccount /> : <SavingAccount />}
+                    {(() => {
+                      switch (parseInt(account.category)) {
+                        case 0: return <BusinessAccount />;
+                        case 1: return <CheckingAccount />;
+                        case 2: return <SavingAccount />;
+                        default: return null;
+                      }
+                    })()}
                   </div>
 
                   <div>
-                    <h4>{isChecking ? 'Conta Corrente' : 'Conta Poupança'}</h4>
+                    <h4>
+                      {(() => {
+                        switch (parseInt(account.category)) {
+                          case 0: return 'Conta Empresarial';
+                          case 1: return 'Conta Corrente';
+                          case 2: return 'Conta Poupança';
+                          default: return null;
+                        }
+                      })()}
+                    </h4>
                     <h6>
                       Saldo: R$ {account.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </h6>
@@ -254,86 +319,13 @@ export default function Dashboard() {
             <p>Nenhuma conta encontrada para este perfil.</p>
           )}
 
-
-          {/* <div className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
-            <div className="rounded-circle d-flex justify-content-center align-items-center">
-              <CheckingAccount />
-            </div>
-
-            <div>
-              <h4>Conta Corrente</h4>
-              <h6>Saldo: R$ 00,00</h6>
-            </div>
-
-            <button>Realizar Transação</button>
-          </div>
-
-          <div className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
-            <div className="rounded-circle d-flex justify-content-center align-items-center">
-              <SavingAccount />
-            </div>
-
-            <div>
-              <h4>Conta Poupança</h4>
-              <h6>Saldo: R$ 00,00</h6>
-            </div>
-
-            <button>Realizar Transação</button>
-          </div> */}
         </div>
 
         <div className="profilesTransactions justify-content-center">
-          <div className="profileTransactions">
+          <div className="d-flex flex-column profileTransactions align-items-center justify-content-center">
 
-            <div className="profileTransaction">
-              <h5 className="mb-4">Conta Poupança</h5>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Data</th>
-                    <th>Categoria</th>
-                    <th>Valor(R$)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>2025-12-23</td>
-                    <td>Saque</td>
-                    <td>30,00</td>
-                  </tr>
-                  <tr>
-                    <td>2025-12-23</td>
-                    <td>Depósito</td>
-                    <td>70,00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div className="profileTransaction mt-5">
-              <h5 className="mb-4">Conta Corrente</h5>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Data</th>
-                    <th>Categoria</th>
-                    <th>Valor(R$)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>2025-12-23</td>
-                    <td>Saque</td>
-                    <td>40,00</td>
-                  </tr>
-                  <tr>
-                    <td>2025-12-23</td>
-                    <td>Depósito</td>
-                    <td>100,00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <h5 >HISTÓRICO DE TRANSAÇÕES</h5>
+            <h2>EM BREVE</h2>
 
           </div>
         </div>
