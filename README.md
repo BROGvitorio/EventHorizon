@@ -1,90 +1,109 @@
-# EventHorizon API
+# EventHorizon
 
-## Estrutura funcional atualmente implementada
+## 1. Descrição do Projeto
+O EventHorizon é uma aplicação que simula um banco digital. Desenvolvido em uma arquitetura cliente-servidor, utiliza .NET, Entity Framework Core e MySQL no backend, combinados a React, TypeScript e Bootstrap no frontend. Com autenticação segura baseada em JWT e uma API documentada via Swagger, o sistema permite o cadastro de usuários e o controle completo de perfis de Pessoas Físicas (PF) e Jurídicas (PJ), além do gerenciamento de contas bancárias.
 
-### Autenticação
+## 2. Tecnologias Utilizadas
+* Linguagens: C#, HTML, CSS e Typescript
+* Frameworks: .NET, Entity Framework Core e Bootstrap
+* Banco de dados: Mysql
+* Segurança: JSON Web Token (JWT)
+* Documentação de API: Swagger
 
-* Cadastro de usuário
-* Login
-* Validação de credenciais
-* Redirecionamento autenticado
+## 3. Instruções de Execução
+Para rodar o projeto localmente, siga os passos abaixo:
 
-### CRUD de usuários
+> #### Pré-requisitos
+> Antes de começar, certifique-se de ter instalado em sua máquina:
+> * .NET SDK (compatível com a versão 10.0)
+> * EF Core CLI
+> * Node.js e npm
 
-### Interface Web
-
-* Página de login
-* Página de cadastro
-* Dashboard administrativa
-
----
-
-## Como executar o projeto
-
-### 1. Clonar ou baixar o projeto
-
-Clone o repositório:
-
+### 3.1. Clonar o repositório
+Clone o projeto para o seu ambiente local utilizando o Git:
 ```bash
-git clone https://github.com/BROGvitorio/EventHorizon_API.git
+git clone https://github.com/BROGvitorio/EventHorizon.git
+cd EventHorizon
+
 ```
+> 💡 **Alternativa:** Se preferir, faça o download do arquivo .zip diretamente pela interface do GitHub e extraia o conteúdo na sua máquina.
 
-Ou faça o download do arquivo `.zip` diretamente pelo GitHub e extraia o conteúdo.
-
----
-
-### 2. Abrir a pasta do projeto
-
-Após descompactar o projeto, abra um terminal dentro da pasta raiz do projeto.
-
----
-
-### 3. Executar a aplicação
-
-Execute o seguinte comando:
+### 3.2. Configurar e executar o Backend (API)
+Abra um terminal na raiz do projeto e execute os comandos abaixo para aplicar as migrations do banco de dados e iniciar o servidor .NET:
 
 ```bash
+cd EventHorizon_API
+dotnet ef database update
 dotnet run
+
+```
+*Nota: Mantenha este terminal aberto para acompanhar os logs da API.*
+
+### 3.3. Configurar e executar o Frontend (Client)
+Abra um outro terminal na raiz do projeto e execute os comandos para instalar as dependências e iniciar o servidor de desenvolvimento:
+
+```bash
+cd EventHorizon_Client
+npm install
+npm run dev
+
 ```
 
----
-
-### 4. Acessar a aplicação
-
-Após a execução, o terminal exibirá uma URL HTTP semelhante a:
-
+### 3.4. Acessar a aplicação
+Assim que o comando do frontend for finalizado, o terminal do Client exibirá a URL local gerada, semelhante a:
 ```txt
-http://localhost:xxxx
+http://localhost:5173
+
 ```
+Basta abrir esse endereço no seu navegador para começar a usar o **EventHorizon**!
 
-Abra essa URL no navegador.
+## 4. Endpoints da API
+> Obs.: Todos os endpoints começam de `http://localhost:5042/`
 
----
+#### Gerenciamento de usuários `/api/User`
+* GET `/GetByEmail/{userEmail}` - Retorna um usuário pelo email
 
-## Fluxo de utilização
+* POST - Adiciona um novo usuário
+> body = {
+&nbsp; "Email": string,
+&nbsp; "LoginPassword": string
+}
 
-### Cadastro
+#### Gerenciamento de perfil PF `/api/Person`
+* GET `/GetByUserId/{userId}` - Retorna um cadastro de pessoa física pelo ID de usuário
+* GET `/GetByCpf/{personCpf}` - Retorna um cadastro de pessoa física pelo CPF do perfil
 
-Na página de cadastro é possível criar um novo usuário.
+* POST - Adiciona um novo casdastro PF
+> body = {
+&nbsp; "UserId": number,
+&nbsp; "Cpf": string,
+&nbsp; "FullName": string
+&nbsp; "BirthDate": Date,
+&nbsp; "Salary": number
+}
 
-Os dados cadastrados são armazenados no banco MySQL local configurado no projeto.
+#### Gerenciamento de perfil PJ `/api/Company`
+* GET `/GetByUserId/{userId}` - Retorna um cadastro de pessoa jurídica pelo ID de usuário
+* GET `/GetByCnpj/{companyCnpj}` - Retorna um cadastro de pessoa jurícica pelo CNPJ do perfil
 
----
+* POST - Adiciona um novo casdastro PJ
+> body = {
+&nbsp; "UserId": number,
+&nbsp; "Cnpj": string,
+&nbsp; "FantasyName": string
+&nbsp; "MonthlyIncome": number
+}
 
-### Login
+#### Gerenciamento de contas bancárias `/api/BankAccount`
+* GET `/GetByOwnerId/{ownerId}` - Retorna uma lista de contas bancárias pelo ID do perfil titular
 
-Após o cadastro, o usuário pode realizar login utilizando as mesmas credenciais registradas no banco.
+* POST - Adiciona uma nova conta bancária
+> body = {
+&nbsp; OwnerId: number,
+&nbsp; OwnerMonthlyIncome: number,
+&nbsp; Balance: number,
+&nbsp; Category: string
+}
 
----
 
-### Dashboard
-
-Depois do login bem-sucedido, o sistema redireciona automaticamente para a dashboard.
-
-Na dashboard é possível:
-
-* Visualizar usuários cadastrados
-* Criar novos usuários
-* Editar usuários existentes
-* Remover usuários
 
