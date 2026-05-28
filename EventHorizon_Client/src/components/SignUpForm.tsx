@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import './SignUpForm.css';
 
 import { userUrl, personUrl, bankAccountUrl} from './CustomLib';
-import type {Person, BankAccount} from './CustomLib';
+import type {Person, CBankAccount} from './CustomLib';
 
 export default function SignUpForm() {
     const formRef = useRef<HTMLFormElement>(null);
@@ -168,7 +168,7 @@ export default function SignUpForm() {
 
             const personData: Person = await personResponse.json();
 
-            const newCheckingAccount: BankAccount = {
+            const newCheckingAccount: CBankAccount = {
                 ownerId: personData.id,
                 ownerMonthlyIncome: personData.salary,
                 category: "saving"
@@ -210,7 +210,7 @@ export default function SignUpForm() {
 
             const personData: Person = await personResponse.json();
 
-            const newSavingAccount: BankAccount = {
+            const newSavingAccount: CBankAccount = {
                 ownerId: personData.id,
                 ownerMonthlyIncome: personData.salary,
                 category: "checking"

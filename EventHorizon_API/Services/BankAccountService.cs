@@ -38,5 +38,15 @@ namespace EventHorizon_API.Services
 
             await _repository.Create(newAccount);
         }
+
+        public async Task<List<BankAccount>> GetByOwnerId(int ownerId) {
+            List<BankAccount> bankAccounts = await _repository.GetByOwnerId(ownerId);
+
+            if (bankAccounts != null) {
+                return bankAccounts;
+            }
+                
+            throw new Exception("Esse usuário não possui conta bancária cadastrada.");
+        }
     }
 }

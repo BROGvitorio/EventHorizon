@@ -25,6 +25,13 @@ namespace EventHorizon_API.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<BankAccount>> GetByOwnerId(int ownerId)
+        {
+            return await _context.BankAccounts
+                .Where(ba => ba.OwnerId == ownerId)
+                .ToListAsync();
+        }
+
         public async Task Delete(BankAccount account)
         {
             _context.BankAccounts.Remove(account);

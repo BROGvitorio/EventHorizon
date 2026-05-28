@@ -15,17 +15,6 @@ namespace EventHorizon_API.Data.Configurations
 
             bankAccount.HasKey(ba => ba.Id);
 
-            /*
-                When querying for derived entities, which use the TPH pattern, EF Core adds a predicate over discriminator column in the query. 
-                This filter makes sure that we don't get any additional rows for base types or sibling types not in the result. 
-                This filter predicate is skipped for the base entity type since querying for the base entity will get results for all the entities in the hierarchy.
-
-
-                Relational database providers, such as SQL Server, will not automatically use the discriminator predicate when querying shared columns when using a cast. 
-                The query Url = (blog as RssBlog).Url would also return the Url value for the sibling Blog rows. 
-                To restrict the query to RssBlog entities you need to manually add a filter on the discriminator, such as 
-                Url = blog is RssBlog ? (blog as RssBlog).Url : null.
-            */
             bankAccount.Property(ba => ba.Category)
                 .HasConversion<string>()
                 .HasMaxLength(10)

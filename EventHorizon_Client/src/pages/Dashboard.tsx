@@ -9,15 +9,17 @@ import './Dashboard.css'
 import { useNavigate } from 'react-router';
 import CompanyModal from '../components/CompanyModal';
 
-import type { Company, Person, Profile } from '../components/CustomLib';
+import type { BankAccount, Company, Person, Profile } from '../components/CustomLib';
 import type { UserPayload } from '../components/CustomLib';
-import { userUrl, personUrl, companyUrl } from '../components/CustomLib';
+import { userUrl, personUrl, companyUrl, bankAccountUrl } from '../components/CustomLib';
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [profileName, setProfileName] = useState('');
+
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
 
   const [email, setEmail] = useState('');
   const [userId, setUserId] = useState(-1);
@@ -44,6 +46,35 @@ export default function Dashboard() {
     catch (error) {
       console.error("Invalid token", error);
       navigate('/');
+    }
+  }
+
+  const getOwnerAccounts = async (token: string, ownerId: number) => {
+    try {
+      const accountResponse = await fetch(`${bankAccountUrl}/GetByOwnerId/${ownerId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      let bankAccounts: BankAccount[] = [];
+      if (accountResponse.ok) {
+        const accountsList: BankAccount[] = await accountResponse.json();
+
+        bankAccounts = accountsList.map(ba => ({
+          ownerId: ba.ownerId,
+          balance: ba.balance,
+          // loanLimit: ba.loanLimit,
+          // loanDebt: ba.loanDebt,
+          category: ba.category
+        }));
+      }
+
+      setBankAccounts([...bankAccounts]);
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -74,14 +105,14 @@ export default function Dashboard() {
 
         const personData: Person = await personResponse.json();
 
-        const pfProfile : Profile = {
+        const pfProfile: Profile = {
           documentId: personData.cpf,
           name: personData.fullName,
           type: 'PF',
-          ownerId: personData.ownerId,
+          ownerId: personData.id,
           userId: personData.userId
         }
-        
+
         const companyResponse = await fetch(`${companyUrl}/GetByUserId/${userId}`, {
           method: 'GET',
           headers: {
@@ -94,11 +125,11 @@ export default function Dashboard() {
         if (companyResponse.ok) {
           const companiesList: Company[] = await companyResponse.json();
 
-          pjProfiles = companiesList.map( c => ({
+          pjProfiles = companiesList.map(c => ({
             documentId: c.cnpj,
             name: c.fantasyName,
             type: 'PJ',
-            ownerId: c.ownerId,
+            ownerId: c.id,
             userId: parseInt(userId)
           }));
         }
@@ -106,9 +137,25 @@ export default function Dashboard() {
         setProfiles([pfProfile, ...pjProfiles]);
         setProfileName(pfProfile.name);
 
+        const personResponse2 = await fetch(`${personUrl}/GetByCpf/${personData.cpf}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        });
+
+        const personData2: Person = await personResponse2.json();
+
+        if (personResponse2.ok) {
+          console.log(personData2);
+          getOwnerAccounts(token, personData2.id);
+        }
+
       } catch (erro) {
         console.error(erro);
       }
+
     };
     fetchUserData();
 
@@ -158,6 +205,11 @@ export default function Dashboard() {
 
               if (selectedProfile) {
                 setProfileName(selectedProfile.name);
+
+                const token = localStorage.getItem('token');
+                console.log(selectedProfile.ownerId);
+                if (!token) return;
+                getOwnerAccounts(token, selectedProfile.ownerId);
               }
             }}
           >
@@ -174,7 +226,36 @@ export default function Dashboard() {
 
       <section className="profileDetails d-flex w-100 p-5 justify-content-between">
         <div className="profileAccounts d-flex flex-column align-items-center row-gap-5">
-          <div className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
+
+          {bankAccounts.length > 0 ? (
+            bankAccounts.map((account, index) => {
+              const isChecking = parseInt(account.category) == 1;
+
+              console.log(bankAccounts);
+
+              return (
+                <div key={index} className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
+                  <div className="rounded-circle d-flex justify-content-center align-items-center">
+                    {isChecking ? <CheckingAccount /> : <SavingAccount />}
+                  </div>
+
+                  <div>
+                    <h4>{isChecking ? 'Conta Corrente' : 'Conta Poupança'}</h4>
+                    <h6>
+                      Saldo: R$ {account.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </h6>
+                  </div>
+
+                  <button className="btn">Realizar Transação</button>
+                </div>
+              );
+            })
+          ) : (
+            <p>Nenhuma conta encontrada para este perfil.</p>
+          )}
+
+
+          {/* <div className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
             <div className="rounded-circle d-flex justify-content-center align-items-center">
               <CheckingAccount />
             </div>
@@ -198,7 +279,7 @@ export default function Dashboard() {
             </div>
 
             <button>Realizar Transação</button>
-          </div>
+          </div> */}
         </div>
 
         <div className="profilesTransactions justify-content-center">

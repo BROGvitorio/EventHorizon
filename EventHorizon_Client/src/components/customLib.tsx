@@ -30,8 +30,16 @@ export interface Profile {
 
 export interface UserPayload { email: string };
 
-export interface BankAccount {
+export interface CBankAccount {
   ownerId: number;
   ownerMonthlyIncome: number;
+  category: string;
+}
+
+export interface BankAccount {
+  ownerId: number;
+  balance: number;
+  // loanLimit: number;
+  // loanDebt: number;
   category: string;
 }

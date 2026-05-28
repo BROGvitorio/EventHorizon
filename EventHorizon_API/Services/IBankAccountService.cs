@@ -6,5 +6,6 @@ namespace EventHorizon_API.Services
     public interface IBankAccountService
     {
         Task Create(BankAccountDTO bankAccountDTO);
+        Task<List<BankAccount>> GetByOwnerId(int ownerId);
     }
 }
