@@ -15,20 +15,17 @@ namespace EventHorizon_API.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get() => Ok(await _service.ListAll());
-
         [HttpPost]
         public async Task<IActionResult> Post(BankAccountDTO bankAccountDTO)
         {
             try
             {
                 await _service.Create(bankAccountDTO);
-                return Ok("Livro cadastrado com sucesso");
+                return Ok(new {message = "Conta cadastrada com sucesso!"});
 
             } catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new {message = e.Message});
             }
         }
     }

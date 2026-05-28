@@ -10,10 +10,10 @@
 
         public int Id { get; set; }
         public AccountCategory Category { get; set; }
-        public decimal Balance { get; set; }
+        public decimal Balance { get; set; } = 0;
 
         public decimal LoanLimit { get; set; }
-        public decimal LoanDebt { get; set; }
+        public decimal LoanDebt { get; set; } = 0;
         public decimal WithdrawalTax { get; set; } = 0;
 
         public int OwnerId { get; set; }
@@ -21,7 +21,7 @@
 
         protected BankAccount () { }
 
-        public BankAccount (int ownerId)
+        public BankAccount (int ownerId, decimal monthlyIncome)
         {
             OwnerId = ownerId;
         }

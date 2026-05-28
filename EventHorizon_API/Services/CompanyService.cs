@@ -13,17 +13,11 @@ namespace EventHorizon_API.Services
             _repository = repository;
         }
 
-        public async Task<CompanyDTO> GetByCnpj(String companyCnpj) {
+        public async Task<Company> GetByCnpj(String companyCnpj) {
             Company company = await _repository.GetByCnpj(companyCnpj);
 
             if (company != null) {
-                CompanyDTO companyDTO = new CompanyDTO {
-                    UserId = company.UserId,
-                    Cnpj = company.Cnpj,
-                    FantasyName = company.FantasyName,
-                    MonthlyIncome = company.MonthlyIncome
-                };
-                return companyDTO;
+                return company;
             }
                 
             throw new Exception("Cadastro PJ não encontrado.");

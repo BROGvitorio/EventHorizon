@@ -15,18 +15,11 @@ namespace EventHorizon_API.Services
             _repository = repository;
         }
 
-        public async Task<PersonDTO> GetByCpf(String personCpf) {
+        public async Task<Person> GetByCpf(String personCpf) {
             Person person = await _repository.GetByCpf(personCpf);
 
             if (person != null) {
-                PersonDTO personDTO = new PersonDTO {
-                    UserId = person.UserId,
-                    Cpf = person.Cpf,
-                    FullName = person.FullName,
-                    BirthDate = person.BirthDate,
-                    Salary = person.Salary
-                };
-                return personDTO;
+                return person;
             }
                 
             throw new Exception("Cadastro PF não encontrado.");

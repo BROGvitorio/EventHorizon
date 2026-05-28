@@ -5,7 +5,6 @@ namespace EventHorizon_API.Services
 {
     public interface IBankAccountService
     {
-        Task<IEnumerable<BankAccount>> ListAll();
         Task Create(BankAccountDTO bankAccountDTO);
     }
 }

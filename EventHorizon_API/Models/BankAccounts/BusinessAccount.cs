@@ -4,10 +4,10 @@
     {
         private BusinessAccount () { }
 
-        public BusinessAccount(int ownerId) : base(ownerId)
+        public BusinessAccount(int ownerId, decimal monthlyIncome) : base(ownerId, monthlyIncome)
         {
             Category = AccountCategory.Business;
-            // Cálculo do limite de empréstimo MI * 0.5
+            LoanLimit = 0.3m * monthlyIncome;
         }
     }
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import './CompanyModal.css';
-import type { Company, Profile } from "./customLib";
+import type { Company, Profile } from "./CustomLib";
 
 interface CompanyModalProps {
     isLoading: boolean;

@@ -7,7 +7,7 @@ namespace EventHorizon_API.Services
     public interface ICompanyService
     {
         Task Create(CompanyDTO personDTO);
-        Task<CompanyDTO> GetByCnpj(String companyCnpj);
+        Task<Company> GetByCnpj(String companyCnpj);
         Task<List<CompanyDTO>> GetByUserId(int userId);
     }
 }

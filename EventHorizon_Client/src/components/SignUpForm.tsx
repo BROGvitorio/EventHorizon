@@ -3,8 +3,8 @@ import { useState, useRef } from "react";
 
 import './SignUpForm.css';
 
-const userUrl = "/EventHorizon_API/api/User";
-const personUrl = "/EventHorizon_API/api/Person";
+import { userUrl, personUrl, bankAccountUrl} from './CustomLib';
+import type {Person, BankAccount} from './CustomLib';
 
 export default function SignUpForm() {
     const formRef = useRef<HTMLFormElement>(null);
@@ -132,9 +132,7 @@ export default function SignUpForm() {
             const personData = await personResponse.json();
 
             if (personResponse.ok) {
-                alert(userMessage);
                 console.log(personData.message);
-                window.location.reload();
             }
             else {
                 alert(personData.message);
@@ -158,6 +156,92 @@ export default function SignUpForm() {
             setSalary('');
             setSignUpStep(1);
             return;
+        }
+
+        try {
+            const personResponse = await fetch(`${personUrl}/GetByCpf/${newPersonProfile.Cpf}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const personData: Person = await personResponse.json();
+
+            const newCheckingAccount: BankAccount = {
+                ownerId: personData.id,
+                ownerMonthlyIncome: personData.salary,
+                category: "saving"
+            }
+
+            const accountResponse = await fetch(bankAccountUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newCheckingAccount)
+            });
+
+            const accountData = await accountResponse.json();
+
+            if (accountResponse.ok) {
+                console.log(accountData.message);
+            }
+            else {
+                alert(accountData.message);
+            }
+            
+        } catch (error) {
+            console.error(error);
+            setCpf('');
+            setFullName('');
+            setBirthdate('');
+            setSalary('');
+            setSignUpStep(1);
+        }
+
+        try {
+            const personResponse = await fetch(`${personUrl}/GetByCpf/${newPersonProfile.Cpf}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const personData: Person = await personResponse.json();
+
+            const newSavingAccount: BankAccount = {
+                ownerId: personData.id,
+                ownerMonthlyIncome: personData.salary,
+                category: "checking"
+            }
+
+            const accountResponse = await fetch(bankAccountUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newSavingAccount)
+            });
+
+            const accountData = await accountResponse.json();
+
+            if (accountResponse.ok) {
+                alert(userMessage);
+                console.log(accountData.message);
+                window.location.reload();
+            }
+            else {
+                alert(accountData.message);
+            }
+            
+        } catch (error) {
+            console.error(error);
+            setCpf('');
+            setFullName('');
+            setBirthdate('');
+            setSalary('');
+            setSignUpStep(1);
         } finally {
             setIsLoading(false);
         }

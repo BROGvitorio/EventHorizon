@@ -3,10 +3,10 @@
     public class SavingAccount : BankAccount
     {
         private SavingAccount () { }
-        public SavingAccount(int ownerId) : base(ownerId)
+        public SavingAccount (int ownerId, decimal monthlyIncome) : base(ownerId, monthlyIncome)
         {
             Category = AccountCategory.Saving;
-            // Cálculo do limite de empréstimo MI * 0.3
+            LoanLimit = 0.3m * monthlyIncome;
         }
     }
 }

@@ -4,11 +4,11 @@
     {
         public CheckingAccount () { }
 
-        public CheckingAccount (int ownerId) : base (ownerId)
+        public CheckingAccount (int ownerId, decimal monthlyIncome) : base(ownerId, monthlyIncome)
         {
             WithdrawalTax = 0.05m;
             Category = AccountCategory.Checking;
-            // Cálculo do limite de empréstimo MI * 0.3
+            LoanLimit = 0.3m * monthlyIncome;
         }
     }
 }

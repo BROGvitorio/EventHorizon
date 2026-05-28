@@ -9,9 +9,9 @@ import './Dashboard.css'
 import { useNavigate } from 'react-router';
 import CompanyModal from '../components/CompanyModal';
 
-import type { Company, Person, Profile } from '../components/customLib';
-import type { UserPayload } from '../components/customLib';
-import { userUrl, personUrl, companyUrl } from '../components/customLib';
+import type { Company, Person, Profile } from '../components/CustomLib';
+import type { UserPayload } from '../components/CustomLib';
+import { userUrl, personUrl, companyUrl } from '../components/CustomLib';
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +78,7 @@ export default function Dashboard() {
           documentId: personData.cpf,
           name: personData.fullName,
           type: 'PF',
+          ownerId: personData.ownerId,
           userId: personData.userId
         }
         
@@ -97,6 +98,7 @@ export default function Dashboard() {
             documentId: c.cnpj,
             name: c.fantasyName,
             type: 'PJ',
+            ownerId: c.ownerId,
             userId: parseInt(userId)
           }));
         }

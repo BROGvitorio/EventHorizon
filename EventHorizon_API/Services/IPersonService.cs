@@ -7,7 +7,7 @@ namespace EventHorizon_API.Services
     public interface IPersonService
     {
         Task Create(PersonDTO personDTO);
-        Task<PersonDTO> GetByCpf(String personCpf);
+        Task<Person> GetByCpf(String personCpf);
         Task<PersonDTO> GetByUserId(int userId);
     }
 }

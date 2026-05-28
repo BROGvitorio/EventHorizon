@@ -13,11 +13,6 @@ namespace EventHorizon_API.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<BankAccount>> ListAll()
-        {
-            return await _context.BankAccounts.ToListAsync();
-        }
-
         public async Task Create(BankAccount newAccount)
         {
             await _context.BankAccounts.AddAsync(newAccount);
