@@ -33,6 +33,7 @@ Abra um terminal na raiz do projeto e execute os comandos abaixo para aplicar as
 
 ```bash
 cd EventHorizon_API
+dotnet build
 dotnet ef database update
 dotnet run
 
