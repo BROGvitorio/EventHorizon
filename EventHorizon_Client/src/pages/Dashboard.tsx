@@ -12,6 +12,7 @@ import CompanyModal from '../components/CompanyModal';
 import type { BankAccount, Company, Person, Profile } from '../components/CustomLib';
 import type { UserPayload } from '../components/CustomLib';
 import { userUrl, personUrl, companyUrl, bankAccountUrl } from '../components/CustomLib';
+import TransactionModal from '../components/TransactionModal';
 
 export const getLocalDate = (): string => {
   const localDate = new Date();
@@ -281,7 +282,7 @@ export default function Dashboard() {
 
           {bankAccounts.length > 0 ? (
             bankAccounts.map((account, index) => {
-
+              console.log(bankAccounts);
               return (
                 <div key={index} className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
                   <div className="rounded-circle d-flex justify-content-center align-items-center">
@@ -311,7 +312,9 @@ export default function Dashboard() {
                     </h6>
                   </div>
 
-                  <button className="btn">Realizar Transação</button>
+                  <button className="btn " data-bs-toggle="modal" data-bs-target="#transactionModal">Realizar Transação</button>
+
+                  <TransactionModal></TransactionModal>
                 </div>
               );
             })
