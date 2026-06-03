@@ -1,12 +1,9 @@
-﻿using static EventHorizon_API.Models.BankTransaction;
-
-namespace EventHorizon_API.DTOs
+﻿namespace EventHorizon_API.DTOs
 {
     public class BankTransactionDTO
     {
-        public int AccountId { get; set; }
-
-        public TransactionCategory Category { get; set; }
+        public string Category { get; set; }
         public decimal Amount { get; set; }
+        public DateOnly Date { get; set; }
     }
 }

@@ -15,11 +15,14 @@ namespace EventHorizon_API.Data.Configurations
             transaction.Property(t => t.Category)
                 .HasConversion<string>()
                 .HasMaxLength(11)
-                //.HasColumnType("enum")
                 .IsRequired();
 
             transaction.Property(t => t.Amount)
                 .HasPrecision(15, 2)
+                .IsRequired();
+
+            transaction.Property(t => t.Date)
+                .HasColumnType("date")
                 .IsRequired();
         }
     }

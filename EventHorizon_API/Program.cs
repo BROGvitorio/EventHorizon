@@ -19,15 +19,21 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 // dotnet ef migrations remove
 // dotnet ef database update
 
-builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
-builder.Services.AddScoped<IBankAccountService, BankAccountService>();
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
+
+builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+
+builder.Services.AddScoped<IBankTransactionRepository, BankTransactionRepository>();
+builder.Services.AddScoped<IBankTransactionService, BankTransactionService>();
+
+builder.Services.AddScoped<IMakeBankTransactionUseCase, MakeBankTransactionUseCase>();
+
 
 // Configuração JWT
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
@@ -84,9 +90,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -9,26 +9,29 @@ namespace EventHorizon_API.Controllers
     public class BankTransactionController : ControllerBase
     {
         private readonly IBankTransactionService _service;
+        private readonly IMakeBankTransactionUseCase _usecase;
 
-        public BankTransactionController(IBankTransactionService service)
+        public BankTransactionController(IBankTransactionService service, IMakeBankTransactionUseCase usecase)
         {
             _service = service;
+            _usecase = usecase;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get() => Ok(await _service.ListAll());
 
         [HttpPost]
-        public async Task<IActionResult> Post(BankTransactionDTO bankTransactionDTO)
+        public async Task<IActionResult> Post(int accountId, BankTransactionDTO bankTransactionDTO)
         {
             try
             {
-                await _service.Create(bankTransactionDTO);
+                await _usecase.MakeBankTransaction(accountId, bankTransactionDTO);
                 return Ok("Transação registrada com sucesso");
 
             } catch (Exception e)
             {
-                return BadRequest(e.Message);
+                var realErrorMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
+                return BadRequest(new { message = realErrorMessage });
             }
         }
     }

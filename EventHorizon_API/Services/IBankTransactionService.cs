@@ -7,6 +7,5 @@ namespace EventHorizon_API.Services
     public interface IBankTransactionService
     {
         Task<IEnumerable<BankTransaction>> ListAll();
-        Task Create(BankTransactionDTO bankTransactionDTO);
     }
 }

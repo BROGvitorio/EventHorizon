@@ -37,5 +37,10 @@ namespace EventHorizon_API.Repositories
             _context.BankAccounts.Remove(account);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<BankAccount> GetById(int accountId)
+        {
+            return await _context.BankAccounts.FirstOrDefaultAsync(ba => ba.Id == accountId);
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace EventHorizon_API.Repositories
         Task<List<BankAccount>> GetByOwnerId(int ownerId);
         Task Update(BankAccount updatedAccount);
         Task Delete(BankAccount bankAccount);
+        Task<BankAccount> GetById(int accountId);
     }
 }

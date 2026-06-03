@@ -25,5 +25,29 @@
         {
             OwnerId = ownerId;
         }
+
+        private decimal CheckBalance () {
+            return Balance;
+        }
+
+        private bool CheckBalance (decimal amount) {
+            return Balance >= amount;
+        }
+
+        public decimal Withdrawal (decimal amount) {
+            decimal totalAmount = amount * (1 + WithdrawalTax);
+
+            if (CheckBalance(totalAmount)) {
+                Balance -= totalAmount;
+                return totalAmount;
+            }
+
+            throw new Exception("Saldo insuficiente.");
+        }
+
+        public decimal Deposit (decimal amount) {
+            Balance += amount;
+            return amount;
+        }
     }
 }
