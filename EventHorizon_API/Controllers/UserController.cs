@@ -18,9 +18,6 @@ namespace EventHorizon_API.Controllers
             _service = service;
         }
 
-        [HttpGet("ListAll")]
-        public async Task<IActionResult> Get() => Ok(await _service.ListAll());
-
         [HttpGet("GetByEmail")]
         public async Task<IActionResult> Get(String userEmail) {
             return Ok(await _service.GetByEmail(userEmail));

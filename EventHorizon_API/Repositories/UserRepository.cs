@@ -14,11 +14,6 @@ namespace EventHorizon_API.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<User>> ListAll()
-        {
-            return await _context.Users.ToListAsync();
-        }
-
         public async Task Create(User newUser)
         {
             await _context.Users.AddAsync(newUser);

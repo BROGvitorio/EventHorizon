@@ -13,9 +13,6 @@ namespace EventHorizon_API.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<User>> ListAll() =>
-            await _repository.ListAll();
-
         public async Task Create(UserDTO userDTO)
         {
             if (userDTO.Email == null || userDTO.Email.Trim() == "")
