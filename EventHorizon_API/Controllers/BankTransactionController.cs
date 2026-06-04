@@ -20,18 +20,20 @@ namespace EventHorizon_API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get() => Ok(await _service.ListAll());
 
-        [HttpPost]
-        public async Task<IActionResult> Post(int accountId, BankTransactionDTO bankTransactionDTO)
+        [HttpPost("{accountId}")]
+        public async Task<IActionResult> Post(
+                [FromRoute] int accountId, 
+                [FromBody] BankTransactionDTO bankTransactionDTO
+            )
         {
             try
             {
                 await _usecase.MakeBankTransaction(accountId, bankTransactionDTO);
-                return Ok("Transação registrada com sucesso");
+                return Ok(new { message = "Transação registrada com sucesso" });
 
             } catch (Exception e)
             {
-                var realErrorMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
-                return BadRequest(new { message = realErrorMessage });
+                return BadRequest(new { message = e.Message });
             }
         }
     }

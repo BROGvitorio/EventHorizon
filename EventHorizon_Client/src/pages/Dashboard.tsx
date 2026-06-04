@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { jwtDecode, type JwtPayload } from "jwt-decode";
+import { useEffect, useState } from 'react';
+import { jwtDecode } from "jwt-decode";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -30,6 +30,9 @@ export default function Dashboard() {
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [profileName, setProfileName] = useState('');
+  
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<BankAccount | null>(null);
 
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
 
@@ -40,8 +43,6 @@ export default function Dashboard() {
 
   const addProfile = (newProfile: Profile) => {
     setProfiles(prevProfiles => {
-      // console.log(prevProfiles);
-
       const exists = prevProfiles.some(p => p.documentId === newProfile.documentId);
 
       if (exists) return prevProfiles;
@@ -76,10 +77,9 @@ export default function Dashboard() {
         const accountsList: BankAccount[] = await accountResponse.json();
 
         bankAccounts = accountsList.map(ba => ({
+          id: ba.id,
           ownerId: ba.ownerId,
           balance: ba.balance,
-          // loanLimit: ba.loanLimit,
-          // loanDebt: ba.loanDebt,
           category: ba.category
         }));
       }
@@ -197,7 +197,9 @@ export default function Dashboard() {
         setProfiles(allProfiles);
 
         if (pfProfile) {
-          setProfileName(pfProfile.name);
+          setSelectedProfile(pfProfile);
+          // setProfileName(pfProfile.name);
+          
           if (initialOwnerId !== -1) {
             getOwnerAccounts(token, initialOwnerId);
           }
@@ -243,7 +245,7 @@ export default function Dashboard() {
 
       <section className="currentProfileSection d-flex px-5 justify-content-between align-items-center">
         <div>
-          <h1>Olá, {profileName}!</h1>
+          <h1>Olá, {selectedProfile?.name}!</h1>
           <p>{getLocalDate()}</p>
         </div>
 
@@ -254,15 +256,16 @@ export default function Dashboard() {
             id="profileSelect"
             onChange={(e) => {
               const selectedDocumentId = e.target.value;
-              const selectedProfile = profiles.find(p => p.documentId === selectedDocumentId);
+              const profile = profiles.find(p => p.documentId === selectedDocumentId);
 
-              if (selectedProfile) {
-                setProfileName(selectedProfile.name);
+              if (profile) {
+                setSelectedProfile(profile)
+                setProfileName(profile.name);
 
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                getOwnerAccounts(token, selectedProfile.ownerId);
+                getOwnerAccounts(token, profile.ownerId);
               }
             }}
           >
@@ -282,7 +285,7 @@ export default function Dashboard() {
 
           {bankAccounts.length > 0 ? (
             bankAccounts.map((account, index) => {
-              console.log(bankAccounts);
+              // console.log(bankAccounts);
               return (
                 <div key={index} className="profileAccount d-flex w-75 p-4 justify-content-around align-items-center column-gap-4">
                   <div className="rounded-circle d-flex justify-content-center align-items-center">
@@ -312,15 +315,32 @@ export default function Dashboard() {
                     </h6>
                   </div>
 
-                  <button className="btn " data-bs-toggle="modal" data-bs-target="#transactionModal">Realizar Transação</button>
+                  <button 
+                    className="btn " 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#transactionModal"
+                    onClick={() => setSelectedAccount(account)}
+                    >
+                    Realizar Transação
+                  </button>
 
-                  <TransactionModal></TransactionModal>
                 </div>
               );
             })
           ) : (
             <p>Nenhuma conta encontrada para este perfil.</p>
           )}
+          
+          <TransactionModal
+            accountId={selectedAccount?.id}
+            onTransactionSuccess={() => {
+              const token = localStorage.getItem('token');
+
+              if (!token || !selectedProfile) return;
+
+              getOwnerAccounts(token, selectedProfile.ownerId);
+            }}
+          ></TransactionModal>
 
         </div>
 
