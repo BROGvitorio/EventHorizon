@@ -63,48 +63,21 @@ Basta abrir esse endereço no seu navegador para começar a usar o **EventHorizo
 
 #### Gerenciamento de usuários `/api/User`
 * GET `/GetByEmail/{userEmail}` - Retorna um usuário pelo email
-
 * POST - Adiciona um novo usuário
-> body = {
-&nbsp; "Email": string,
-&nbsp; "LoginPassword": string
-}
 
 #### Gerenciamento de perfil PF `/api/Person`
 * GET `/GetByUserId/{userId}` - Retorna um cadastro de pessoa física pelo ID de usuário
 * GET `/GetByCpf/{personCpf}` - Retorna um cadastro de pessoa física pelo CPF do perfil
-
 * POST - Adiciona um novo casdastro PF
-> body = {
-&nbsp; "UserId": number,
-&nbsp; "Cpf": string,
-&nbsp; "FullName": string
-&nbsp; "BirthDate": Date,
-&nbsp; "Salary": number
-}
 
 #### Gerenciamento de perfil PJ `/api/Company`
 * GET `/GetByUserId/{userId}` - Retorna um cadastro de pessoa jurídica pelo ID de usuário
 * GET `/GetByCnpj/{companyCnpj}` - Retorna um cadastro de pessoa jurícica pelo CNPJ do perfil
-
 * POST - Adiciona um novo casdastro PJ
-> body = {
-&nbsp; "UserId": number,
-&nbsp; "Cnpj": string,
-&nbsp; "FantasyName": string
-&nbsp; "MonthlyIncome": number
-}
 
 #### Gerenciamento de contas bancárias `/api/BankAccount`
 * GET `/GetByOwnerId/{ownerId}` - Retorna uma lista de contas bancárias pelo ID do perfil titular
-
 * POST - Adiciona uma nova conta bancária
-> body = {
-&nbsp; OwnerId: number,
-&nbsp; OwnerMonthlyIncome: number,
-&nbsp; Balance: number,
-&nbsp; Category: string
-}
 
-
-
+#### Gerenciamento de transações bancárias `/api/BankTransaction`
+* POST - Adiciona uma nova transação bancária
